@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Temple Renovation Prompt Studio</title>
+  <style>
+    :root {
+      --bg: #f7f3ea;
+      --panel: #ffffff;
+      --panel-soft: #f8ead6;
+      --ink: #231f1a;
+      --muted: #69625a;
+      --brand: #9e3f14;
+      --brand-2: #562312;
+      --accent: #147c72;
+      --accent-2: #d89a1d;
+      --line: #ded2c0;
+      --success: #25745d;
+      --danger: #a12b2b;
+      --shadow: 0 12px 30px rgba(52, 39, 24, 0.1);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 34px 20px 24px;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.02)),
+        linear-gradient(135deg, #4a1f12, #9e3f14 44%, #147c72);
+      color: #fff9ef;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 5px;
+      background: linear-gradient(90deg, #d89a1d, #f7f3ea, #147c72);
+    }
+
+    .container {
+      width: min(1280px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.5fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 780px;
+      font-size: 1.08rem;
+      margin: 0;
+      color: rgba(255, 249, 239, 0.88);
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius);
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-card strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .hero-card p {
+      margin: 0;
+      color: rgba(255, 249, 239, 0.88);
+      font-size: 0.94rem;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(247, 243, 234, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 11px 0;
+    }
+
+    .nav-inner a,
+    .nav-inner button {
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: var(--radius);
+      padding: 8px 13px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-inner a:hover,
+    .nav-inner button:hover {
+      transform: translateY(-1px);
+      background: #f3eadc;
+      border-color: #cbbca7;
+    }
+
+    main {
+      padding: 24px 0 48px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.two {
+      grid-template-columns: 0.78fr 1.22fr;
+      align-items: start;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    section,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    section {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    h2,
+    h3,
+    h4 {
+      margin: 0 0 10px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.55rem;
+    }
+
+    h3 {
+      font-size: 1.13rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    .section-note {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head .section-note {
+      margin-bottom: 0;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      background: var(--panel-soft);
+      border: 1px solid #efd6ae;
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .step .num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #51351d;
+      margin: 0 0 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #dec8aa;
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font: inherit;
+      background: #fffdf9;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(195, 90, 17, 0.14);
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .field-row.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button,
+    .btn {
+      border: 0;
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--brand);
+      color: white;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+
+    button:hover,
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--brand-2);
+    }
+
+    button.secondary,
+    .btn.secondary {
+      background: #f8ead6;
+      color: var(--brand-2);
+      border: 1px solid #e6c69c;
+    }
+
+    button.secondary:hover,
+    .btn.secondary:hover {
+      background: #ffe7bd;
+    }
+
+    button.ghost {
+      background: transparent;
+      color: var(--brand-2);
+      border: 1px dashed #cfaa79;
+    }
+
+    button.accent {
+      background: var(--accent);
+    }
+
+    button.accent:hover {
+      background: #0e5f58;
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    .mini {
+      padding: 7px 9px;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: var(--radius);
+      background: #eef7f5;
+      color: #0d5a53;
+      border: 1px solid #a6cbc6;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fffdf8;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .tab {
+      background: #f8ead6;
+      color: #6a2b07;
+      border: 1px solid #e6c69c;
+    }
+
+    .tab.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    .prompt-box {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #1f150d;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .prompt-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #ffe3bb;
+      background: #2b1b0f;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    pre {
+      margin: 0;
+      padding: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #fff8eb;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.55;
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      background: #fff0d1;
+      color: #572707;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    td {
+      background: #fffdf9;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .scene-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #2e1b0c;
+      color: white;
+      padding: 12px 14px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 100;
+      font-weight: 800;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .notice {
+      border-left: 4px solid var(--brand);
+      background: #fff4df;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      color: #51351d;
+    }
+
+    .notice strong {
+      color: #6f2a02;
+    }
+
+    .scene-editor {
+      border: 1px dashed #d8b383;
+      border-radius: var(--radius);
+      background: #fff9ef;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .scene-selector {
+      border: 1px solid #ead0a8;
+      border-radius: var(--radius);
+      background: #fff9ef;
+      padding: 14px;
+      margin: 0 0 14px;
+    }
+
+    .scene-selector-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .scene-selector-head p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .scene-count-pill {
+      white-space: nowrap;
+      border-radius: var(--radius);
+      background: #e8f5f1;
+      color: #0f6158;
+      border: 1px solid #b9dfd7;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .scene-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .scene-choice {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 9px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdfa;
+      padding: 10px;
+    }
+
+    .scene-choice input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--brand);
+    }
+
+    .scene-choice strong {
+      display: block;
+      color: var(--brand-2);
+      line-height: 1.25;
+      margin-bottom: 3px;
+    }
+
+    .scene-choice span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .scene-choice .badge {
+      display: inline-block;
+      margin-top: 7px;
+      border: 1px solid #efd6ae;
+      border-radius: var(--radius);
+      background: #f8ead6;
+      color: #6a2a0c;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 0.86rem;
+    }
+
+    .copy-status {
+      color: #ffe7be;
+      opacity: 0.82;
+      font-size: 0.78rem;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px 0 30px;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .checkbox-row input {
+      width: auto;
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .preview-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .preview-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px;
+      background: #fffdfa;
+    }
+
+    .preview-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar {
+      height: 9px;
+      background: #f6e1bf;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      width: 83%;
+      background: linear-gradient(90deg, var(--brand), var(--accent-2), var(--accent));
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: #fffdf9;
+      margin-top: 12px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: #5a2605;
+    }
+
+    .kbd {
+      font-family: var(--mono);
+      background: #f7e5c9;
+      border: 1px solid #dfc399;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+    }
+
+    .handoff-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .handoff-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfaf7;
+    }
+
+    .handoff-item strong {
+      display: block;
+      color: var(--brand-2);
+      margin-bottom: 4px;
+    }
+
+    .field-help {
+      margin: -2px 0 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .workflow-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .workflow-row {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfaf7;
+      padding: 12px;
+    }
+
+    .workflow-row .num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .workflow-row strong {
+      display: block;
+      color: var(--brand-2);
+      margin-bottom: 2px;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .tool-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdf8;
+      padding: 14px;
+    }
+
+    .tool-card h3 {
+      margin-bottom: 6px;
+    }
+
+    .tool-card ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .tool-card li {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid.two,
+      .grid.three,
+      .steps,
+      .cards,
+      .preview-list,
+      .handoff-grid,
+      .scene-choice-grid,
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-row,
+      .field-row.three {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      nav,
+      .controls,
+      button,
+      .toast {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      section,
+      .panel {
+        box-shadow: none;
+      }
+
+      pre {
+        max-height: none;
+        color: #000;
+        background: #fff;
+      }
+
+      .prompt-box {
+        background: #fff;
+      }
+
+      .prompt-head {
+        color: #000;
+        background: #f4f4f4;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container hero">
+      <div>
+        <span class="pill">AI Short-Form Temple Renovation Workflow</span>
+        <h1>Temple Renovation Prompt Studio</h1>
+        <p class="subtitle">Create reusable prompt packages for Hindu temple restoration time-lapse shorts. Build the final restored image first, reverse-engineer earlier keyframes from it, then animate forward using frame-to-frame continuity.</p>
+      </div>
+      <div class="hero-card">
+        <strong>Restored image first</strong>
+        <p>Lock one final hero frame, use it as the blueprint for every earlier stage, then move forward: abandoned → cleaned → repaired → restored → decorated → divine reveal.</p>
+        <div class="progress-bar"><span></span></div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#setup">Setup</a>
+      <a href="#generator">Prompt Generator</a>
+      <a href="#scene-table">Scene Table</a>
+      <a href="#video-prompts">Video Prompts</a>
+      <a href="#tools">Tools</a>
+      <a href="#exports">Export</a>
+      <button id="resetAll" class="secondary" type="button">Reset</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section id="setup">
+      <div class="section-head">
+        <div>
+          <h2>1. Setup and workflow</h2>
+          <p class="section-note">Use this as your repeatable process for each deity, goddess, region, or temple style.</p>
+        </div>
+        <span class="pill">Final image → reverse keyframes → forward video</span>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Create final image</h3>
+          <p class="small muted">Generate the fully restored divine reveal first. This becomes your visual anchor.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Reverse-build keyframes</h3>
+          <p class="small muted">Generate earlier versions while preserving layout, camera angle, and architecture.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Animate forward</h3>
+          <p class="small muted">Use start/end keyframes to create transformations from old temple to final reveal.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <h3>Edit and publish</h3>
+          <p class="small muted">Stitch clips, add bells, devotional music, captions, and export 9:16 video.</p>
+        </div>
+      </div>
+
+      <div class="notice" style="margin-top:16px;">
+        <strong>Copyright reminder:</strong> devotional songs and bhajans may still be copyrighted. Use music you created, properly licensed music, YouTube Audio Library tracks, or royalty-free devotional instrumentals.
+      </div>
+
+      <div class="workflow-list">
+        <div class="workflow-row">
+          <div class="num">1</div>
+          <div><strong>Copy only the Final Image prompt first.</strong><span class="small muted">Generate Scene 6, the fully restored temple. Download/save that image with a clear name like <span class="kbd">scene06_final.png</span>.</span></div>
+        </div>
+        <div class="workflow-row">
+          <div class="num">2</div>
+          <div><strong>Then use the Reverse Image Keyframe Table.</strong><span class="small muted">For Scene 5, attach/upload <span class="kbd">scene06_final.png</span> as the reference image, then paste Scene 5's prompt. For Scene 4, attach Scene 5's image, and continue backward.</span></div>
+        </div>
+        <div class="workflow-row">
+          <div class="num">3</div>
+          <div><strong>After Scene 1 through Scene 6 are ready, make video clips forward.</strong><span class="small muted">Use Scene 1 as the start image and Scene 2 as the end image for Clip 1, then Scene 2 to Scene 3, until the final reveal.</span></div>
+        </div>
+        <div class="workflow-row">
+          <div class="num">4</div>
+          <div><strong>For smoother stitching, reuse the last frame.</strong><span class="small muted">Save the final frame from each generated clip and use it as the starting reference for the next clip when your video tool supports continuation.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid two" id="generator">
+      <section>
+        <h2>2. Project variables</h2>
+        <p class="section-note">Choose a deity preset, then mix and match list values for style, location, lighting, camera, decor, sound, and captions. These values power every prompt.</p>
+
+        <div class="field-row">
+          <div>
+            <label for="preset">Deity preset</label>
+            <select id="preset"></select>
+          </div>
+          <div>
+            <label for="targetTool">Target video tool</label>
+            <select id="targetTool">
+              <option value="generic">Generic image/video AI</option>
+              <option value="runway">Runway-style start/end keyframes</option>
+              <option value="pika">Pika-style image-to-video</option>
+              <option value="luma">Luma-style keyframe animation</option>
+              <option value="kling">Kling-style start/end frame animation</option>
+              <option value="comfyui">ComfyUI / Wan local workflow</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="visualTreatment">Visual treatment</label>
+            <select id="visualTreatment"></select>
+            <p class="field-help">Use this to control realism, camera language, and how decorative the result should be.</p>
+          </div>
+          <div>
+            <label for="referenceLock">Reference lock</label>
+            <select id="referenceLock"></select>
+            <p class="field-help">These features should remain unchanged across every keyframe and clip.</p>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="deityName">Deity name</label>
+            <select id="deityName"></select>
+          </div>
+          <div>
+            <label for="templeStyle">Temple style</label>
+            <select id="templeStyle"></select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="locationStyle">Location / regional feel</label>
+            <select id="locationStyle"></select>
+          </div>
+          <div>
+            <label for="material">Material</label>
+            <select id="material"></select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="finalLighting">Final lighting</label>
+            <select id="finalLighting"></select>
+          </div>
+          <div>
+            <label for="cameraAngle">Camera angle</label>
+            <select id="cameraAngle"></select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="mood">Mood</label>
+            <select id="mood"></select>
+          </div>
+          <div>
+            <label for="durationStyle">Video length style</label>
+            <select id="durationStyle">
+              <option value="short">Short: 25–35 seconds</option>
+              <option value="medium" selected>Medium: 40–60 seconds</option>
+              <option value="long">Long Short: 75–120 seconds</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="decorStyle">Decor style</label>
+          <select id="decorStyle"></select>
+        </div>
+
+        <div style="margin-top:12px;">
+          <label for="specialElements">Deity-specific elements</label>
+          <select id="specialElements"></select>
+        </div>
+
+        <div class="field-row" style="margin-top:12px;">
+          <div>
+            <label for="musicMood">Background song / sound mood</label>
+            <select id="musicMood"></select>
+          </div>
+          <div>
+            <label for="captionStyle">Caption / overlay style</label>
+            <select id="captionStyle"></select>
+          </div>
+        </div>
+
+        <details>
+          <summary>Advanced safety and consistency settings</summary>
+          <div class="checkbox-row">
+            <input id="avoidDeityCloseup" type="checkbox" checked />
+            <label for="avoidDeityCloseup">Avoid close-up deity face generation</label>
+          </div>
+          <div class="checkbox-row">
+            <input id="allowDevotees" type="checkbox" checked />
+            <label for="allowDevotees">Allow respectful devotees in final reveal</label>
+          </div>
+          <div class="checkbox-row">
+            <input id="verticalFormat" type="checkbox" checked />
+            <label for="verticalFormat">Force vertical 9:16 short-form framing</label>
+          </div>
+          <div class="checkbox-row">
+            <input id="includeNegative" type="checkbox" />
+            <label for="includeNegative">Include negative prompt text in generated prompts</label>
+          </div>
+          <label for="negativePrompt">Negative prompt</label>
+          <textarea id="negativePrompt"></textarea>
+        </details>
+
+        <div class="controls">
+          <button id="generateBtn" type="button">Generate Prompts</button>
+          <button id="saveBtn" class="secondary" type="button">Save Locally</button>
+          <button id="loadSampleBtn" class="ghost" type="button">Load Shiva Sample</button>
+        </div>
+      </section>
+
+      <section>
+        <div class="tabs">
+          <button class="tab active" data-tab="finalPrompt" type="button">Step 1: Final Image</button>
+          <button class="tab" data-tab="reversePrompt" type="button">Optional: Reverse Helper</button>
+          <button class="tab" data-tab="masterPrompt" type="button">Optional: Master Brief</button>
+          <button class="tab" data-tab="continuityPrompt" type="button">Optional: Continuity</button>
+          <button class="tab" data-tab="handoffPrompt" type="button">Optional: Frame Handoff</button>
+        </div>
+
+        <div id="finalPrompt" class="tab-panel">
+          <h2>Step 1: Create Scene 6 final image</h2>
+          <p class="section-note">Start here. Copy this prompt, generate the fully restored temple image, then save that result as Scene 6. After that, go to section 3 and create Scene 5 using Scene 6 as the attached reference image.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Short image prompt</span><button class="mini copy-btn" data-copy="finalPromptText" type="button">Copy</button></div>
+            <pre id="finalPromptText"></pre>
+          </div>
+          <h3>Optional Scene 7 close-up ending</h3>
+          <p class="section-note">After Scene 6 is created, attach/upload the Scene 6 image and use this prompt to create a final close-up shot for the ending.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Short close-up prompt</span><button class="mini copy-btn" data-copy="closeUpPromptText" type="button">Copy</button></div>
+            <pre id="closeUpPromptText"></pre>
+          </div>
+        </div>
+
+        <div id="reversePrompt" class="tab-panel" style="display:none;">
+          <h2>Optional reverse-building helper</h2>
+          <p class="section-note">You usually do not need this tab. The row prompts in section 3 are easier because each row tells you exactly which reference image to attach.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Short earlier-stage prompt</span><button class="mini copy-btn" data-copy="reversePromptText" type="button">Copy</button></div>
+            <pre id="reversePromptText"></pre>
+          </div>
+        </div>
+
+        <div id="masterPrompt" class="tab-panel" style="display:none;">
+          <h2>Master project prompt</h2>
+          <p class="section-note">Use this to explain the whole project to an AI assistant or production tool.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Master production instruction</span><button class="mini copy-btn" data-copy="masterPromptText" type="button">Copy</button></div>
+            <pre id="masterPromptText"></pre>
+          </div>
+        </div>
+
+        <div id="continuityPrompt" class="tab-panel" style="display:none;">
+          <h2>Continuity and negative prompts</h2>
+          <p class="section-note">Add these to every generation for stable results.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Continuity instruction</span><button class="mini copy-btn" data-copy="continuityPromptText" type="button">Copy</button></div>
+            <pre id="continuityPromptText"></pre>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Negative prompt</span><button class="mini copy-btn" data-copy="negativePromptText" type="button">Copy</button></div>
+            <pre id="negativePromptText"></pre>
+          </div>
+        </div>
+
+        <div id="handoffPrompt" class="tab-panel" style="display:none;">
+          <h2>Last-frame handoff prompt</h2>
+          <p class="section-note">Use this when a video tool lets you continue from the previous clip's final frame.</p>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Clip continuation instruction</span><button class="mini copy-btn" data-copy="handoffPromptText" type="button">Copy</button></div>
+            <pre id="handoffPromptText"></pre>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-head"><span>Audio and caption direction</span><button class="mini copy-btn" data-copy="audioCaptionPromptText" type="button">Copy</button></div>
+            <pre id="audioCaptionPromptText"></pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="scene-table">
+      <h2>3. Step 2: Create reverse keyframe images</h2>
+      <p class="section-note">Scene 6 is created only in Step 1 above. Choose extra stages for a longer video, then work from the top row down. Each row tells you exactly which later image to attach as the reference before pasting the prompt.</p>
+      <div id="sceneSelector" class="scene-selector"></div>
+      <div class="controls">
+        <button id="copyAllImages" type="button">Copy Reverse Image Prompts</button>
+        <button id="downloadImageCsv" class="secondary" type="button">Download Reverse Image CSV</button>
+        <button id="addScene" class="ghost" type="button">Add Custom Scene</button>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Scene</th>
+              <th>Stage</th>
+              <th>Reference image to attach</th>
+              <th>Duration</th>
+              <th>Short image prompt</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="imageSceneRows"></tbody>
+        </table>
+      </div>
+
+      <div id="customSceneEditor" class="scene-editor" style="display:none;">
+        <h3>Add custom scene</h3>
+        <div class="field-row three">
+          <div>
+            <label for="customSceneId">Scene number</label>
+            <input id="customSceneId" placeholder="5.8" />
+          </div>
+          <div>
+            <label for="customStage">Stage name</label>
+            <input id="customStage" placeholder="Night aarti reveal" />
+          </div>
+          <div>
+            <label for="customDuration">Duration</label>
+            <input id="customDuration" placeholder="4 sec" />
+          </div>
+        </div>
+        <label for="customDescription">Stage description</label>
+        <textarea id="customDescription" placeholder="Describe what this scene should look like."></textarea>
+        <div class="controls">
+          <button id="saveCustomScene" type="button">Add Scene</button>
+          <button id="cancelCustomScene" class="secondary" type="button">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="video-prompts">
+      <h2>4. Forward video transformation prompts</h2>
+      <p class="section-note">After all selected keyframes are ready, animate forward through the selected timeline. Renovation clips ask workers to remain visible and active; the final close-up clip becomes a slow devotional ending when selected.</p>
+      <div class="controls">
+        <button id="copyAllVideos" type="button">Copy All Video Prompts</button>
+        <button id="downloadVideoCsv" class="secondary" type="button">Download Video Prompt CSV</button>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Clip</th>
+              <th>Start → End</th>
+              <th>Duration</th>
+              <th>Video prompt</th>
+              <th>Tool instructions</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="videoSceneRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tools">
+      <h2>5. Free and low-cost tool guide</h2>
+      <p class="section-note">Use this as a starting stack. Free credits and pricing change often, so confirm the current plan before you commit to a long project.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h3>Final image</h3>
+          <p class="small muted">Best for Scene 6 and reverse keyframes.</p>
+          <ul>
+            <li>Microsoft Designer / Bing Image Creator: easy free starting point.</li>
+            <li>Leonardo AI: useful free daily tokens and good style control.</li>
+            <li>Freepik AI: low-cost suite when you want many image/video models in one place.</li>
+          </ul>
+        </div>
+        <div class="tool-card">
+          <h3>Reference edits</h3>
+          <p class="small muted">Best for creating Scene 5 from Scene 6, Scene 4 from Scene 5, and so on.</p>
+          <ul>
+            <li>Leonardo AI image-to-image or canvas tools.</li>
+            <li>Freepik AI image generation with reference images.</li>
+            <li>ComfyUI with Flux/SDXL if you want the lowest long-term cost and more control.</li>
+          </ul>
+        </div>
+        <div class="tool-card">
+          <h3>Image to video</h3>
+          <p class="small muted">Best for forward clips between two keyframes.</p>
+          <ul>
+            <li>Runway: strong quality; free credits are limited and do not refresh monthly.</li>
+            <li>Pika: friendly for short tests and effects; check current credit rules.</li>
+            <li>Luma Dream Machine or Kling: good motion options; free tiers are limited and may watermark.</li>
+          </ul>
+        </div>
+        <div class="tool-card">
+          <h3>Edit, audio, export</h3>
+          <p class="small muted">Best after clips are generated.</p>
+          <ul>
+            <li>CapCut or DaVinci Resolve: edit, captions, sound effects, and 9:16 export.</li>
+            <li>FFmpeg: extract last frames and join clips when you want precision.</li>
+            <li>YouTube Audio Library or original music: safer devotional background audio.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. Editing checklist</h2>
+      <p class="section-note">Use this after the AI video clips are generated.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>Frame continuity</h3>
+          <p>Extract each clip's last frame and use it as the next clip's first-frame reference. Use crossfades only when a handoff still jumps.</p>
+        </div>
+        <div class="card">
+          <h3>Audio</h3>
+          <p>Layer temple bells, conch, tanpura or drone, soft ambience, and devotional music with proper usage rights.</p>
+        </div>
+        <div class="card">
+          <h3>Text overlay</h3>
+          <p>Use minimal respectful text: short deity mantra, restoration phrase, or place label. Keep overlays secondary to the temple.</p>
+        </div>
+      </div>
+      <details>
+        <summary>FFmpeg helper commands</summary>
+        <div class="prompt-box" style="margin-top:12px;">
+          <div class="prompt-head"><span>Extract last frame</span><button class="mini copy-btn" data-copy="ffmpegExtract" type="button">Copy</button></div>
+          <pre id="ffmpegExtract">ffmpeg -sseof -0.1 -i scene01.mp4 -update 1 scene01_last_frame.png</pre>
+        </div>
+        <div class="prompt-box">
+          <div class="prompt-head"><span>Concatenate clips</span><button class="mini copy-btn" data-copy="ffmpegConcat" type="button">Copy</button></div>
+          <pre id="ffmpegConcat">ffmpeg -f concat -safe 0 -i clips.txt -c copy final_temple_video.mp4</pre>
+        </div>
+      </details>
+    </section>
+
+    <section id="exports">
+      <h2>7. Export package</h2>
+      <p class="section-note">Download a complete prompt package for your project.</p>
+      <div class="preview-list" id="projectPreview"></div>
+      <div class="controls">
+        <button id="downloadMarkdown" type="button">Download Markdown Prompt Sheet</button>
+        <button id="downloadJson" class="secondary" type="button">Download JSON</button>
+        <button id="copyPackage" class="ghost" type="button">Copy Full Prompt Package</button>
+        <button onclick="window.print()" class="secondary" type="button">Print / Save PDF</button>
+      </div>
+    </section>
+
+    <div class="footer">
+      Built as a standalone browser file. No server, login, or internet connection required after opening the file.
+    </div>
+  </main>
+
+  <div id="toast" class="toast">Copied</div>
+
+  <script>
+    const optionLists = {
+      deityName: [
+        "Lord Shiva",
+        "Maa Durga",
+        "Lord Ram",
+        "Lord Krishna",
+        "Lord Hanuman",
+        "Lord Ganesha",
+        "Maa Lakshmi",
+        "Maa Saraswati",
+        "chosen Hindu deity"
+      ],
+      visualTreatment: [
+        "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, highly detailed textures, respectful sacred realism, documentary style",
+        "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, historically respectful Indian architecture",
+        "photorealistic cinematic temple documentary, respectful devotional realism, no fantasy redesign",
+        "realistic heritage restoration documentary, natural light, detailed stone texture",
+        "cinematic devotional short-film style, warm light, realistic architecture",
+        "high-detail architectural visualization, realistic stone, clean vertical composition",
+        "festival aarti cinematic style, warm lamps, realistic temple details",
+        "serene morning documentary style, soft light, sacred atmosphere"
+      ],
+      referenceLock: [
+        "lock temple silhouette, sanctum doorway, main stairs, pillar count, courtyard edges, and horizon line",
+        "lock the shikhara silhouette, sanctum doorway, main stairs, pillar count, courtyard edges, and horizon line",
+        "lock the temple entrance, sanctum position, pillar count, courtyard shape, roofline, and camera height",
+        "lock the main doorway, carved pillars, steps, courtyard rangoli position, roofline, and camera axis",
+        "lock the marble arches, courtyard layout, central sanctum, stair alignment, and camera angle",
+        "lock the entrance, stone pillars, courtyard path, flags, roofline, and horizon",
+        "lock the lotus motifs, sanctum doorway, diya rows, steps, courtyard geometry, pillars, and camera height",
+        "lock the temple silhouette, lotus pond edge, steps, pillars, sanctum doorway, and horizon line"
+      ],
+      templeStyle: [
+        "ancient North Indian Nagara stone temple",
+        "grand North Indian Shakti temple with ornate carved pillars",
+        "Ayodhya-inspired grand sandstone temple with carved pillars",
+        "Vrindavan-style ornate temple with delicate arches and carved marble",
+        "traditional saffron-toned North Indian temple with strong stone pillars",
+        "beautiful Indian temple with carved pillars and welcoming entrance",
+        "elegant Indian temple with ornate marble carvings and lotus details",
+        "serene white marble Indian temple with elegant pillars",
+        "ancient Indian temple with detailed stone carvings",
+        "South Indian Dravidian temple with tall gopuram and carved mandapam",
+        "Odisha Kalinga-style stone temple with detailed tower carvings",
+        "Hoysala-inspired soapstone temple with intricate star-shaped platform",
+        "Himalayan stone temple with wooden details and mountain setting",
+        "small village Hindu temple with simple stone courtyard"
+      ],
+      locationStyle: [
+        "Varanasi riverside sacred setting near the Ganga",
+        "festive Navratri temple courtyard in India",
+        "sacred North Indian temple complex",
+        "peaceful Vrindavan devotional setting",
+        "temple courtyard near hills and trees",
+        "festive Ganesh Chaturthi-inspired temple courtyard",
+        "Diwali-inspired temple courtyard",
+        "peaceful temple beside a lotus pond",
+        "sacred Indian temple setting",
+        "ancient forest temple setting in India",
+        "rural Indian village temple courtyard",
+        "Himalayan temple setting with misty mountains",
+        "South Indian temple town street",
+        "desert-edge Rajasthan temple courtyard",
+        "coastal temple setting near the sea"
+      ],
+      material: [
+        "aged sandstone and white marble",
+        "warm sandstone, carved marble, red and gold decorative details",
+        "pink sandstone and polished cream marble",
+        "white marble, sandstone, blue and gold decorative accents",
+        "aged orange sandstone and cream stone",
+        "cream marble, warm sandstone, gold decorative accents",
+        "white marble, gold accents, warm sandstone base",
+        "white marble, pale sandstone, subtle gold accents",
+        "aged sandstone and polished marble",
+        "dark granite and carved basalt",
+        "ancient grey stone with copper and brass details",
+        "red sandstone and cream limestone",
+        "weathered black stone and brass lamps",
+        "pale marble and carved teak wood accents"
+      ],
+      finalLighting: [
+        "golden sunrise with soft divine glow",
+        "radiant golden evening aarti light",
+        "warm sunrise with royal devotional glow",
+        "soft golden evening light with joyful devotional glow",
+        "powerful sunrise glow with warm devotional light",
+        "soft golden morning light with festive glow",
+        "Diwali evening glow with thousands of diyas",
+        "soft morning light with calm spiritual glow",
+        "warm golden sunrise with devotional glow",
+        "blue hour evening with glowing diyas",
+        "monsoon-cleared sunlight after rain",
+        "late afternoon warm temple courtyard light",
+        "night aarti lamp glow with incense haze",
+        "misty dawn with soft sacred light"
+      ],
+      cameraAngle: [
+        "centered frontal wide-angle view with slow cinematic push-in",
+        "centered frontal wide-angle view with slow reveal",
+        "symmetrical frontal wide-angle view",
+        "centered courtyard view with gentle camera glide",
+        "low frontal wide-angle view for a strong majestic feel",
+        "centered frontal view with gentle push-in",
+        "centered wide view with slow cinematic pull-back",
+        "centered frontal view with slow gentle push-in",
+        "centered frontal wide-angle view",
+        "slightly low-angle symmetrical view",
+        "wide courtyard view from temple gate",
+        "three-quarter frontal view showing entrance and side pillars",
+        "slow vertical reveal from steps to shikhara",
+        "close courtyard view facing sanctum doorway"
+      ],
+      mood: [
+        "peaceful, divine, majestic, devotional",
+        "powerful, sacred, festive, devotional",
+        "noble, peaceful, divine, majestic",
+        "joyful, loving, peaceful, devotional",
+        "devotional, energetic, protective, sacred",
+        "auspicious, joyful, peaceful, devotional",
+        "prosperous, peaceful, graceful, devotional",
+        "calm, pure, wise, devotional",
+        "peaceful, sacred, majestic, devotional",
+        "mysterious, ancient, reverent, hopeful",
+        "festive, warm, devotional, cinematic",
+        "serene, meditative, sacred, realistic",
+        "dramatic, uplifting, devotional, majestic"
+      ],
+      decorStyle: [
+        "marigold garlands, brass diyas, saffron flags, rangoli, copper kalash, temple bells",
+        "red and gold cloth, marigold garlands, diyas, red rangoli, saffron flags, aarti lamps",
+        "saffron flags, marigold garlands, brass diyas, rangoli, temple bells",
+        "flower garlands, diyas, peacock feather patterns, blue-gold cloth, rangoli",
+        "saffron flags, oil lamps, marigold garlands, red-orange rangoli, temple bells",
+        "marigold garlands, modak offerings, diyas, rangoli, red and yellow cloth",
+        "rows of diyas, lotus flowers, marigold garlands, gold cloth, rangoli",
+        "white flowers, soft yellow garlands, diyas, simple rangoli, elegant cloth",
+        "simple marigold garlands, brass lamps, clean rangoli, temple bells",
+        "grand festival decor with lamps, flags, flowers, rangoli, and incense",
+        "minimal restored temple decor with only diyas and flowers",
+        "night aarti setup with lamps, bells, incense, and flower offerings"
+      ],
+      specialElements: [
+        "Nandi statue placed respectfully in front, trishul, damru motif, bilva leaves, rudraksha details",
+        "trishul symbol, lion motifs, lotus flowers, bells, Navratri decoration",
+        "bow motifs, lotus designs, saffron dhwaj flags, royal temple lamps",
+        "flute motifs, peacock feather motifs, lotus flowers, temple bells, tulsi leaves",
+        "gada symbol, saffron cloth, sindoor-inspired color palette, mountain motifs",
+        "lotus motifs, modak bowls, mouse symbol, bells, auspicious swastik motifs used respectfully",
+        "lotus motifs, kalash, coins used symbolically, temple bells, Diwali lamps",
+        "veena motifs, swan motifs, lotus pond details, books used symbolically, temple bells",
+        "deity-specific sacred symbols, flowers, lamps, bells, traditional Indian temple details",
+        "temple bells, brass lamps, kalash, lotus motifs, incense, sacred symbols",
+        "carved pillars, sanctum doorway, bells, diyas, flowers, and traditional offerings"
+      ],
+      musicMood: [
+        "Om Namah Shivaya devotional feeling, temple bells, conch, low tanpura drone, soft damru texture, gradual aarti rise",
+        "powerful Shakti devotional song mood, temple bells, conch, dholak pulse, rising aarti energy",
+        "peaceful Ram bhajan feeling, temple bells, conch, soft tabla, tanpura drone, uplifting final aarti",
+        "gentle Krishna bhajan mood, flute lead, manjira bells, tanpura bed, soft joyful aarti rise",
+        "energetic Hanuman Chalisa-inspired devotional mood, bells, dholak, conch, steady rising strength",
+        "auspicious Ganesha aarti mood, temple bells, manjira, soft dholak, bright festive lift",
+        "graceful Lakshmi aarti mood, bells, tanpura, soft tabla, warm Diwali ambience, rising lamp glow",
+        "serene Saraswati vandana mood, veena texture, soft bells, tanpura drone, gentle morning ambience",
+        "licensed devotional song mood, temple bells, conch, tanpura drone, soft percussion, rising final aarti",
+        "instrumental bhajan mood, bells, conch, tanpura, soft tabla, warm devotional rise",
+        "quiet temple ambience, bells, wind, incense, tanpura drone, gentle aarti finish"
+      ],
+      captionStyle: [
+        "minimal respectful captions, 3-5 words, warm lower third, no loud effects",
+        "minimal respectful captions, red-gold lower third, devotional phrases only",
+        "minimal respectful captions, saffron lower third, short devotional lines",
+        "minimal respectful captions, blue-gold lower third, soft devotional phrasing",
+        "minimal respectful captions, red-yellow lower third, clean festive type",
+        "minimal respectful captions, gold-white lower third, calm devotional words",
+        "minimal respectful captions, white-gold lower third, quiet devotional tone",
+        "minimal respectful captions, 3-5 words, subtle lower third, no clutter",
+        "no captions, visuals and music only",
+        "short restoration captions, small lower-third text, devotional tone",
+        "one final devotional phrase only, no captions during renovation"
+      ]
+    };
+
+    const presets = {
+      shiva: {
+        label: "Lord Shiva",
+        deityName: "Lord Shiva",
+        templeStyle: "ancient North Indian Nagara stone temple",
+        locationStyle: "Varanasi riverside sacred setting near the Ganga",
+        material: "aged sandstone and white marble",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, highly detailed textures, respectful sacred realism",
+        referenceLock: "lock the shikhara silhouette, sanctum doorway, Nandi placement, main stairs, pillar count, courtyard edges, and horizon line",
+        finalLighting: "golden sunrise with soft divine glow",
+        cameraAngle: "centered frontal wide-angle view with slow cinematic push-in",
+        mood: "peaceful, divine, majestic, devotional",
+        decorStyle: "marigold garlands, brass diyas, saffron flags, rangoli, copper kalash, temple bells",
+        specialElements: "Nandi statue placed respectfully in front, trishul, damru motif, bilva leaves, rudraksha details",
+        musicMood: "Om Namah Shivaya devotional feeling, temple bells, conch, low tanpura drone, soft damru texture, gradual aarti rise",
+        captionStyle: "minimal respectful captions, 3-5 words, warm lower third, no loud effects"
+      },
+      durga: {
+        label: "Maa Durga",
+        deityName: "Maa Durga",
+        templeStyle: "grand North Indian Shakti temple with ornate carved pillars",
+        locationStyle: "festive Navratri temple courtyard in India",
+        material: "warm sandstone, carved marble, red and gold decorative details",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, highly detailed textures, sacred festive realism",
+        referenceLock: "lock the temple entrance, goddess sanctum position, pillar count, courtyard shape, roofline, and camera height",
+        finalLighting: "radiant golden evening aarti light",
+        cameraAngle: "centered frontal wide-angle view with slow reveal",
+        mood: "powerful, sacred, festive, devotional",
+        decorStyle: "red and gold cloth, marigold garlands, diyas, red rangoli, saffron flags, aarti lamps",
+        specialElements: "trishul symbol, lion motifs, lotus flowers, bells, Navratri decoration",
+        musicMood: "powerful Shakti devotional song mood, temple bells, conch, dholak pulse, rising aarti energy",
+        captionStyle: "minimal respectful captions, red-gold lower third, devotional phrases only"
+      },
+      ram: {
+        label: "Lord Ram",
+        deityName: "Lord Ram",
+        templeStyle: "Ayodhya-inspired grand sandstone temple with carved pillars",
+        locationStyle: "sacred North Indian temple complex",
+        material: "pink sandstone and polished cream marble",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, dignified and historically respectful",
+        referenceLock: "lock the main mandir silhouette, central doorway, steps, pillars, saffron flags, courtyard axis, and horizon line",
+        finalLighting: "warm sunrise with royal devotional glow",
+        cameraAngle: "symmetrical frontal wide-angle view",
+        mood: "noble, peaceful, divine, majestic",
+        decorStyle: "saffron flags, marigold garlands, brass diyas, rangoli, temple bells",
+        specialElements: "bow motifs, lotus designs, saffron dhwaj flags, royal temple lamps",
+        musicMood: "peaceful Ram bhajan feeling, temple bells, conch, soft tabla, tanpura drone, uplifting final aarti",
+        captionStyle: "minimal respectful captions, saffron lower third, short devotional lines"
+      },
+      krishna: {
+        label: "Lord Krishna",
+        deityName: "Lord Krishna",
+        templeStyle: "Vrindavan-style ornate temple with delicate arches and carved marble",
+        locationStyle: "peaceful Vrindavan devotional setting",
+        material: "white marble, sandstone, blue and gold decorative accents",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, joyful devotional realism",
+        referenceLock: "lock the marble arches, courtyard layout, central sanctum, peacock motifs, stair alignment, and camera angle",
+        finalLighting: "soft golden evening light with joyful devotional glow",
+        cameraAngle: "centered courtyard view with gentle camera glide",
+        mood: "joyful, loving, peaceful, devotional",
+        decorStyle: "flower garlands, diyas, peacock feather patterns, blue-gold cloth, rangoli",
+        specialElements: "flute motifs, peacock feather motifs, lotus flowers, temple bells, tulsi leaves",
+        musicMood: "gentle Krishna bhajan mood, flute lead, manjira bells, tanpura bed, soft joyful aarti rise",
+        captionStyle: "minimal respectful captions, blue-gold lower third, soft devotional phrasing"
+      },
+      hanuman: {
+        label: "Lord Hanuman",
+        deityName: "Lord Hanuman",
+        templeStyle: "traditional saffron-toned North Indian temple with strong stone pillars",
+        locationStyle: "temple courtyard near hills and trees",
+        material: "aged orange sandstone and cream stone",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, strong devotional realism",
+        referenceLock: "lock the entrance, stone pillars, courtyard path, saffron flags, gada symbol placement, roofline, and horizon",
+        finalLighting: "powerful sunrise glow with warm devotional light",
+        cameraAngle: "low frontal wide-angle view for a strong majestic feel",
+        mood: "devotional, energetic, protective, sacred",
+        decorStyle: "saffron flags, oil lamps, marigold garlands, red-orange rangoli, temple bells",
+        specialElements: "gada symbol, saffron cloth, sindoor-inspired color palette, mountain motifs",
+        musicMood: "energetic Hanuman Chalisa-inspired devotional mood, bells, dholak, conch, steady rising strength",
+        captionStyle: "minimal respectful captions, saffron lower third, strong devotional words"
+      },
+      ganesha: {
+        label: "Lord Ganesha",
+        deityName: "Lord Ganesha",
+        templeStyle: "beautiful Indian temple with carved pillars and welcoming entrance",
+        locationStyle: "festive Ganesh Chaturthi-inspired temple courtyard",
+        material: "cream marble, warm sandstone, gold decorative accents",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, auspicious festive realism",
+        referenceLock: "lock the main doorway, carved pillars, steps, courtyard rangoli position, roofline, and camera axis",
+        finalLighting: "soft golden morning light with festive glow",
+        cameraAngle: "centered frontal view with gentle push-in",
+        mood: "auspicious, joyful, peaceful, devotional",
+        decorStyle: "marigold garlands, modak offerings, diyas, rangoli, red and yellow cloth",
+        specialElements: "lotus motifs, modak bowls, mouse symbol, bells, auspicious swastik motifs used respectfully",
+        musicMood: "auspicious Ganesha aarti mood, temple bells, manjira, soft dholak, bright festive lift",
+        captionStyle: "minimal respectful captions, red-yellow lower third, clean festive type"
+      },
+      lakshmi: {
+        label: "Maa Lakshmi",
+        deityName: "Maa Lakshmi",
+        templeStyle: "elegant Indian temple with ornate marble carvings and lotus details",
+        locationStyle: "Diwali-inspired temple courtyard",
+        material: "white marble, gold accents, warm sandstone base",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, graceful devotional realism",
+        referenceLock: "lock the lotus motifs, sanctum doorway, diya rows, steps, courtyard geometry, pillars, and camera height",
+        finalLighting: "Diwali evening glow with thousands of diyas",
+        cameraAngle: "centered wide view with slow cinematic pull-back",
+        mood: "prosperous, peaceful, graceful, devotional",
+        decorStyle: "rows of diyas, lotus flowers, marigold garlands, gold cloth, rangoli",
+        specialElements: "lotus motifs, kalash, coins used symbolically, temple bells, Diwali lamps",
+        musicMood: "graceful Lakshmi aarti mood, bells, tanpura, soft tabla, warm Diwali ambience, rising lamp glow",
+        captionStyle: "minimal respectful captions, gold-white lower third, calm devotional words"
+      },
+      saraswati: {
+        label: "Maa Saraswati",
+        deityName: "Maa Saraswati",
+        templeStyle: "serene white marble Indian temple with elegant pillars",
+        locationStyle: "peaceful temple beside a lotus pond",
+        material: "white marble, pale sandstone, subtle gold accents",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, serene devotional realism, calm natural light",
+        referenceLock: "lock the white marble temple silhouette, lotus pond edge, steps, pillars, sanctum doorway, and horizon line",
+        finalLighting: "soft morning light with calm spiritual glow",
+        cameraAngle: "centered frontal view with slow gentle push-in",
+        mood: "calm, pure, wise, devotional",
+        decorStyle: "white flowers, soft yellow garlands, diyas, simple rangoli, elegant cloth",
+        specialElements: "veena motifs, swan motifs, lotus pond details, books used symbolically, temple bells",
+        musicMood: "serene Saraswati vandana mood, veena texture, soft bells, tanpura drone, gentle morning ambience",
+        captionStyle: "minimal respectful captions, white-gold lower third, quiet devotional tone"
+      },
+      generic: {
+        label: "Generic Hindu Temple",
+        deityName: "chosen Hindu deity",
+        templeStyle: "ancient Indian temple with detailed stone carvings",
+        locationStyle: "sacred Indian temple setting",
+        material: "aged sandstone and polished marble",
+        visualTreatment: "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, highly detailed textures, respectful sacred realism, documentary style",
+        referenceLock: "lock the temple silhouette, sanctum doorway, main stairs, pillar count, courtyard edges, and horizon line",
+        finalLighting: "warm golden sunrise with devotional glow",
+        cameraAngle: "centered frontal wide-angle view",
+        mood: "peaceful, sacred, majestic, devotional",
+        decorStyle: "marigold garlands, brass diyas, saffron flags, rangoli, temple bells",
+        specialElements: "deity-specific sacred symbols, flowers, lamps, bells, traditional Indian temple details",
+        musicMood: "licensed devotional song mood, temple bells, conch, tanpura drone, soft percussion, rising final aarti",
+        captionStyle: "minimal respectful captions, 3-5 words, subtle lower third, no clutter"
+      }
+    };
+
+    const defaultNegative = "warped architecture, melting stone, asymmetrical pillars, floating objects, modern buildings, western church architecture, low resolution, blurry, distorted deity face, damaged idol, extra limbs, cartoon, 3d render, watermark, text, chaotic crowds, disrespectful depiction";
+    const oldDefaultNegative = "no horror, no disrespectful depiction, no damaged deity idol, no distorted deity face, no extra limbs, no broken anatomy, no cartoon, no anime, no futuristic elements, no modern city buildings, no western church architecture, no random text, no watermark, no logo, no low detail, no blur, no chaotic crowds, no political symbols";
+
+    const builtInScenes = [
+      {
+        id: 7,
+        stage: "Final devotional close-up",
+        enabled: true,
+        duration: "3–5 sec",
+        reverseInstruction: "Optional ending. Attach/upload the Scene 6 final image as the reference, then generate a respectful close-up detail for the last shot.",
+        description: "respectful close-up of the restored temple entrance, sanctum doorway, diyas, flowers, bells, carvings, and sacred symbols with warm divine light",
+        videoState: "close-up devotional ending",
+        changeCommand: "Create a respectful close-up ending shot from the final restored temple. Focus on the sanctum doorway, glowing diyas, fresh flowers, temple bells, polished carvings, and deity-specific sacred symbols. Avoid extreme close-up deity face details.",
+        nextMotion: "Final ending: slow devotional push-in to close-up details, warm glow, incense drift, bells, and a calm hold on the sacred restored details."
+      },
+      {
+        id: 6,
+        stage: "Final divine reveal",
+        enabled: true,
+        locked: true,
+        duration: "4–5 sec",
+        reverseInstruction: "Start here. Do not attach a previous image. Generate this final restored image first and save it as Scene 6.",
+        description: "fully restored, grand, clean, decorated, glowing, divine final reveal",
+        videoState: "decorated final temple",
+        changeCommand: "Make this temple fully restored, clean, decorated, glowing, festival-ready, with lit diyas, fresh flowers, polished stone, and a peaceful divine reveal.",
+        nextMotion: "Final scene: slow cinematic reveal with glowing diyas, drifting incense, gentle devotional crowd movement, and warm divine light."
+      },
+      {
+        id: 5.6,
+        stage: "Decoration setup",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the decoration setup stage.",
+        description: "decoration setup in progress, garlands, rangoli, flowers, flags, diyas, workers arranging final festival decor",
+        videoState: "decoration setup before final reveal",
+        changeCommand: "Make the same temple clean and painted with decoration setup in progress. Workers place garlands, flowers, rangoli, flags, diyas, and ritual items. Keep it unfinished, not yet a final glowing reveal.",
+        nextMotion: "Workers finish garlands, flowers, rangoli, diyas, and ritual decor; lighting becomes festive and the temple reaches the final reveal."
+      },
+      {
+        id: 5.3,
+        stage: "Lighting setup",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the lighting setup stage.",
+        description: "painted temple with lights being installed, diyas arranged, decoration not finished",
+        videoState: "lighting setup on clean painted temple",
+        changeCommand: "Make the same clean painted temple with workers installing string lights, arranging diyas, and testing warm lamps. Keep decoration incomplete: no full garlands, no final rangoli, no divine glow.",
+        nextMotion: "Workers add lights and diyas, warm lamps turn on gradually, the temple becomes ready for decoration."
+      },
+      {
+        id: 5,
+        stage: "Clean painted temple, no decoration",
+        enabled: true,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the Scene 6 final image as the reference, then paste this prompt. Remove festival decoration but keep the temple clean, painted, and ready.",
+        description: "clean painted restored temple, no festival decoration, no garlands, no rangoli, no glowing diyas, ready for decoration",
+        videoState: "clean painted temple, no decoration",
+        changeCommand: "Make the same temple clean, painted, and restored, but remove all festival decoration: no garlands, no rangoli, no flags, no flower baskets, no glowing diyas, no divine glow. It should look ready for decoration.",
+        nextMotion: "Diyas brighten, golden light intensifies, incense and sacred atmosphere increase, camera reveals the temple more majestically."
+      },
+      {
+        id: 4.6,
+        stage: "Painting in progress",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the painting-in-progress stage.",
+        description: "workers painting the restored temple, partial paint, ladders, paint buckets, no decoration",
+        videoState: "painting in progress",
+        changeCommand: "Make the same restored temple with painting in progress. Workers paint walls, pillars, and details with ladders and paint buckets. Some areas are freshly painted and some remain unfinished. No decoration, no lights.",
+        nextMotion: "Workers paint walls and pillars, raw surfaces become clean painted surfaces, buckets and ladders move through the scene."
+      },
+      {
+        id: 4.3,
+        stage: "Paint prep and primer",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the paint preparation stage.",
+        description: "restored temple prepared for paint, primer patches, cleaned raw surface, no decoration",
+        videoState: "paint preparation and primer",
+        changeCommand: "Make the same restored temple ready for paint. Show primer patches, cleaned raw stone, masked edges, paint trays, ladders, and workers preparing surfaces. No final paint, no decoration, no lights.",
+        nextMotion: "Workers sand, prime, and prepare the restored stone; surfaces become ready for paint."
+      },
+      {
+        id: 4,
+        stage: "Restored structure, not painted",
+        enabled: true,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the Scene 5 image as the reference, then paste this prompt. Keep repairs complete, but remove paint and polish.",
+        description: "restored temple structure, repaired stone, unpainted raw finish, no decoration, no polish",
+        videoState: "restored structure, not painted",
+        changeCommand: "Make the same temple structurally restored but not painted or polished. Repaired pillars and walls, raw stone finish, no decoration, no lamps, no flowers, no fresh paint.",
+        nextMotion: "Flowers appear, diyas light up, garlands are added, rangoli forms, flags and ritual items appear gradually."
+      },
+      {
+        id: 3.5,
+        stage: "Major structural repair",
+        enabled: false,
+        duration: "4–5 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the major repair stage.",
+        description: "major structural repair, scaffolding, workers rebuilding pillars, stone blocks, tools, dust",
+        videoState: "major structural repair",
+        changeCommand: "Make the same temple under major structural repair. Workers rebuild pillars, reset stone blocks, patch walls, and use scaffolding, tools, and dust covers. No paint, no decoration.",
+        nextMotion: "Workers rebuild pillars and walls, stone blocks align, scaffolding remains active, the broken temple becomes structurally restored."
+      },
+      {
+        id: 3,
+        stage: "Broken temple under active repair",
+        enabled: true,
+        duration: "4–5 sec",
+        reverseInstruction: "Attach/upload the Scene 4 image as the reference, then paste this prompt. Add bamboo scaffolding and visible restoration activity.",
+        description: "broken temple under active repair, scaffolding, workers, tools, cracks, dust, partly repaired stone",
+        videoState: "broken temple under active repair",
+        changeCommand: "Make the same temple broken and under active repair. Add scaffolding, workers, repair tools, dust, cracks, chipped stone, partially repaired pillars and walls. No paint, no decoration.",
+        nextMotion: "Scaffolding gradually disappears, carvings sharpen, damaged stone is restored, dust clears, workers complete the restoration."
+      },
+      {
+        id: 2.6,
+        stage: "Deep washing",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the washing stage.",
+        description: "temple being washed, workers cleaning stone, water, brushes, wet courtyard, cracks still visible",
+        videoState: "deep washing and surface cleaning",
+        changeCommand: "Make the same temple being deeply washed and scrubbed. Workers clean stone with brushes, water, cloths, and buckets. Courtyard is wet and cleaner, but cracks and damage remain. No repairs, no paint.",
+        nextMotion: "Workers scrub and wash the temple, dust and stains lift, wet stone becomes visibly cleaner."
+      },
+      {
+        id: 2.3,
+        stage: "Surrounding cleanup",
+        enabled: false,
+        duration: "3–4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the surrounding cleanup stage.",
+        description: "workers clearing bushes, weeds, trash, and courtyard debris around the broken temple",
+        videoState: "surrounding cleanup",
+        changeCommand: "Make the same broken temple with surrounding cleanup in progress. Workers remove bushes, weeds, trash, dry leaves, and courtyard debris. Temple damage and cracks still remain. No repairs, no paint.",
+        nextMotion: "Workers clear bushes, remove trash, sweep the courtyard, and reveal the temple base while damage remains visible."
+      },
+      {
+        id: 2,
+        stage: "Partial cleanup stage",
+        enabled: true,
+        duration: "3–4 sec",
+        reverseInstruction: "Attach/upload the Scene 3 image as the reference, then paste this prompt. Remove major repair work and show early cleanup only.",
+        description: "partially cleaned temple, some trash removed, dust, dry leaves, faded walls, cracks still visible",
+        videoState: "partial cleanup",
+        changeCommand: "Make the same temple only partially cleaned. Some trash removed, but dust, dry leaves, faded walls, cracks, broken courtyard stones, and small debris piles still remain. No major repairs yet.",
+        nextMotion: "Dust clears, leaves disappear, courtyard becomes cleaner, surfaces become visible, early restoration materials appear."
+      },
+      {
+        id: 1,
+        stage: "Abandoned broken temple",
+        enabled: true,
+        locked: true,
+        duration: "3–4 sec",
+        reverseInstruction: "Attach/upload the Scene 2 image as the reference, then paste this prompt. Age it into the old abandoned opening hook.",
+        description: "abandoned broken temple, bushes, weeds, trash, dust, cracks, broken stones, neglected courtyard",
+        videoState: "abandoned broken temple with bushes and trash",
+        changeCommand: "Make the same temple abandoned and broken. Add bushes, weeds, trash, dust, cracked walls, faded carvings, broken stones, rusty gates or doors, and a neglected courtyard. Do not damage or distort any deity idol.",
+        nextMotion: "Slow cinematic push-in toward the abandoned temple, dust motes float, soft breeze moves leaves, quiet devotional atmosphere."
+      }
+    ];
+
+    let scenes = builtInScenes.map(scene => ({ ...scene }));
+
+    const $ = (id) => document.getElementById(id);
+
+    function setFieldValue(id, value) {
+      const el = $(id);
+      if (!el) return;
+      if (el.tagName === "SELECT") {
+        const exists = Array.from(el.options).some(option => option.value === value);
+        if (!exists && value) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value;
+          el.appendChild(option);
+        }
+      }
+      if (el.type === "checkbox") el.checked = Boolean(value);
+      else el.value = value;
+    }
+
+    function populateOptionSelect(id, options) {
+      const select = $(id);
+      if (!select) return;
+      const current = select.value;
+      select.innerHTML = options.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("");
+      if (current) setFieldValue(id, current);
+    }
+
+    function initOptionSelects() {
+      Object.entries(optionLists).forEach(([id, options]) => populateOptionSelect(id, options));
+    }
+
+    function getValues() {
+      return {
+        preset: $("preset").value,
+        targetTool: $("targetTool").value,
+        deityName: $("deityName").value.trim(),
+        templeStyle: $("templeStyle").value.trim(),
+        locationStyle: $("locationStyle").value.trim(),
+        material: $("material").value.trim(),
+        visualTreatment: $("visualTreatment").value.trim(),
+        referenceLock: $("referenceLock").value.trim(),
+        finalLighting: $("finalLighting").value.trim(),
+        cameraAngle: $("cameraAngle").value.trim(),
+        mood: $("mood").value.trim(),
+        durationStyle: $("durationStyle").value,
+        decorStyle: $("decorStyle").value.trim(),
+        specialElements: $("specialElements").value.trim(),
+        musicMood: $("musicMood").value.trim(),
+        captionStyle: $("captionStyle").value.trim(),
+        avoidDeityCloseup: $("avoidDeityCloseup").checked,
+        allowDevotees: $("allowDevotees").checked,
+        verticalFormat: $("verticalFormat").checked,
+        includeNegative: $("includeNegative").checked,
+        negativePrompt: $("negativePrompt").value.trim()
+      };
+    }
+
+    function fillPreset(key) {
+      const p = presets[key] || presets.shiva;
+      setFieldValue("deityName", p.deityName);
+      setFieldValue("templeStyle", p.templeStyle);
+      setFieldValue("locationStyle", p.locationStyle);
+      setFieldValue("material", p.material);
+      setFieldValue("visualTreatment", p.visualTreatment || "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, highly detailed textures, respectful sacred realism, documentary style");
+      setFieldValue("referenceLock", p.referenceLock || "lock temple silhouette, sanctum doorway, main stairs, pillar count, courtyard edges, and horizon line");
+      setFieldValue("finalLighting", p.finalLighting);
+      setFieldValue("cameraAngle", p.cameraAngle);
+      setFieldValue("mood", p.mood);
+      setFieldValue("decorStyle", p.decorStyle);
+      setFieldValue("specialElements", p.specialElements);
+      setFieldValue("musicMood", p.musicMood || "licensed devotional song mood, temple bells, conch, tanpura drone, soft percussion, rising final aarti");
+      setFieldValue("captionStyle", p.captionStyle || "minimal respectful captions, 3-5 words, subtle lower third, no clutter");
+      renderAll();
+    }
+
+    function initPresetSelect() {
+      const select = $("preset");
+      select.innerHTML = Object.entries(presets).map(([key, value]) => `<option value="${key}">${escapeHtml(value.label)}</option>`).join("");
+      select.value = "shiva";
+    }
+
+    function formatPrefix(v) {
+      const base = v.visualTreatment || "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style";
+      return v.verticalFormat ? `Vertical 9:16 ${base}` : base;
+    }
+
+    function respectfulClause(v) {
+      const parts = ["sacred", "respectful", "devotional", "realistic", "highly detailed"];
+      if (v.avoidDeityCloseup) parts.push("avoid close-up deity face details; show sanctum and sacred symbols respectfully");
+      if (!v.allowDevotees) parts.push("no people or devotees visible");
+      return parts.join(", ");
+    }
+
+    function continuity(v) {
+      return `Keep the same temple, ${v.deityName} identity, ${v.templeStyle}, camera angle (${v.cameraAngle}), and fixed details: ${v.referenceLock}. Do not redesign the temple; only change renovation stage, age, cleanliness, decor, and light.`;
+    }
+
+    function negativeClause(v, prefix = "Negative: ") {
+      return v.includeNegative && v.negativePrompt ? ` ${prefix}${v.negativePrompt}` : "";
+    }
+
+    function finalImagePrompt(v) {
+      return `Masterpiece, ${formatPrefix(v)} of a fully restored Hindu temple dedicated to ${v.deityName}. Architectural style: ${v.templeStyle}, ${v.locationStyle}. Materials: highly detailed ${v.material}. ${v.cameraAngle}. pristine clean carvings, perfectly repaired pillars, polished stone, glowing diyas, fresh flowers, ${v.decorStyle}. Include ${v.specialElements}. Lighting: Volumetric, ${v.finalLighting}. Mood: ${v.mood}. ${respectfulClause(v)}. ${continuity(v)}${negativeClause(v)}`;
+    }
+
+    function closeUpImagePrompt(v) {
+      return `Using the attached final restored temple image as reference, create a respectful devotional close-up ending shot. Focus on the restored temple entrance or sanctum doorway, glowing diyas, fresh flowers, bells, polished carvings, ${v.specialElements}. Warm divine light, incense, shallow depth of field, cinematic vertical 9:16. Keep the same ${v.deityName} temple identity and materials. Avoid extreme close-up deity face details.${negativeClause(v)}`;
+    }
+
+    function reversePrompt(v) {
+      return `Using the attached reference image, keep the same temple, camera angle, layout, and main architecture. Change only the renovation condition to: {STAGE_DESCRIPTION}. Preserve the ${v.deityName} temple identity and sacred details. Realistic cinematic look.${negativeClause(v)}`;
+    }
+
+    function masterPrompt(v) {
+      const selectedStages = getActiveScenes().map(scene => scene.videoState || scene.stage).join(" → ");
+      return `Create a vertical short showing an old ${v.deityName} temple restored over time. Style: ${formatPrefix(v)}. Temple: ${v.templeStyle}, ${v.locationStyle}, ${v.material}. Camera: ${v.cameraAngle}. Selected timeline: ${selectedStages}. Workflow: create the final restored wide image first, optionally create a close-up ending from that final image, reverse-build earlier keyframes using the next later selected image as reference, then animate forward through the selected timeline. Music: ${v.musicMood}. Captions: ${v.captionStyle}. ${continuity(v)}`;
+    }
+
+    function sceneImagePrompt(scene, v) {
+      if (scene.id === 7) return closeUpImagePrompt(v);
+      if (scene.id === 6) return finalImagePrompt(v);
+      const change = scene.changeCommand || scene.description;
+      return `Using the attached reference image, keep the same temple, camera angle, layout, and main architecture. Change only the renovation condition to: ${change} Preserve the ${v.deityName} temple identity and sacred details. Realistic cinematic look.${negativeClause(v)}`;
+    }
+
+    function toolInstruction(v) {
+      const base = "Use start and end images as references. Keep architecture, framing, silhouette, stairs, courtyard, and camera stable. Show workers continuously doing the renovation from first frame to last frame. Prefer smooth time-lapse, not chaotic morphing. Save the last frame for the next clip.";
+      const map = {
+        generic: `${base} Generate a smooth image-to-video transformation clip.`,
+        runway: `${base} Use the first keyframe as the start frame and the second keyframe as the end frame. Keep camera motion slow and cinematic. If Extend is used, begin from the saved last frame.`,
+        pika: `${base} Use image-to-video with a concise motion prompt. If end-frame support is limited, generate from the start image, compare against the end keyframe, then regenerate with stronger composition-lock wording.`,
+        luma: `${base} Use keyframes if available. Keep motion natural, cinematic, and stable. Avoid sudden camera jumps between clips.`,
+        kling: `${base} Use start and end frame controls when available. Keep camera movement subtle, avoid changing the temple silhouette, and regenerate if the architecture drifts.`,
+        comfyui: `${base} Use the start/end images in your ComfyUI/Wan workflow. Generate at lower resolution first, keep the seed and camera settings stable, then upscale only the best results.`
+      };
+      return map[v.targetTool] || map.generic;
+    }
+
+    function videoDurationFor(v, startId, endId) {
+      if (v.durationStyle === "short") return startId === 1 ? "3 sec" : "4 sec";
+      if (v.durationStyle === "long") return "7–10 sec";
+      return startId === 1 ? "4 sec" : "5 sec";
+    }
+
+    function transitionPrompt(startScene, endScene, v) {
+      const startState = startScene.videoState || startScene.description;
+      const endState = endScene.videoState || endScene.description;
+      if (endScene.id === 7) {
+        return `Slow devotional ending video. Transform from ${startState} to ${endState}. Start wide, then gently zoom/push in to glowing diyas, flowers, bells, carvings, sanctum doorway, and ${v.specialElements}. Keep the same temple and camera feel. No sudden camera jumps or warping.${negativeClause(v, " Negative: ")}`;
+      }
+      return `High-speed temple renovation time-lapse. Transform from ${startState} to ${endState}. Workers visible throughout, actively cleaning, repairing, painting, or decorating as needed. Keep workers respectful and outside sacred idol areas. Keep the same temple, fixed camera, same layout, no camera jumps, no architecture morphing.${negativeClause(v, " Negative: ")}`;
+    }
+
+    function handoffPrompt(v) {
+      const activeScenes = getActiveScenes();
+      const first = activeScenes[0];
+      const second = activeScenes[1];
+      const last = activeScenes[activeScenes.length - 1];
+      return `Generate the first clip from ${first.stage} to ${second.stage}. Save its last frame. Use that last frame as the next clip's starting reference, with the next selected keyframe as the target. Repeat through the selected timeline until ${last.stage}. Keep workers visible and active through renovation clips. If the close-up ending is selected, use the final wide image to close-up image as a slow devotional ending. If drift happens: preserve ${v.referenceLock}, keep ${v.cameraAngle}, do not redesign the temple. ${toolInstruction(v)}`;
+    }
+
+    function audioCaptionPrompt(v) {
+      return `Audio: ${v.musicMood}. Captions: ${v.captionStyle}. Start quiet, build bells/percussion/devotional energy, hold final reveal 3-5 seconds. Use licensed, original, or royalty-free devotional music.`;
+    }
+
+    function isSceneEnabled(scene) {
+      return scene.locked || scene.enabled !== false;
+    }
+
+    function getActiveScenes() {
+      return [...scenes].filter(isSceneEnabled).sort((a, b) => a.id - b.id);
+    }
+
+    function getForwardPairs() {
+      const sorted = getActiveScenes();
+      const pairs = [];
+      for (let i = 0; i < sorted.length - 1; i++) {
+        pairs.push([sorted[i], sorted[i + 1]]);
+      }
+      return pairs;
+    }
+
+    function getReverseImageScenes() {
+      return getActiveScenes().filter(scene => scene.id < 6).sort((a, b) => b.id - a.id);
+    }
+
+    function sceneKey(scene) {
+      return String(scene.id).replace(".", "-");
+    }
+
+    function sceneLabel(scene) {
+      if (scene.id === 6) return "Scene 6";
+      if (scene.id === 7) return "Scene 7";
+      if (Number.isInteger(scene.id)) return `Scene ${scene.id}`;
+      return `Extra: ${scene.stage}`;
+    }
+
+    function referenceImageForScene(scene) {
+      if (scene.id === 7) return "Attach/upload the Scene 6 final image as the reference.";
+      if (scene.id === 6) return "No reference image. Generate this first and save it as Scene 6.";
+      const nextScene = getActiveScenes().find(s => s.id > scene.id && s.id <= 6);
+      if (nextScene) return `Attach/upload the image generated for ${sceneLabel(nextScene)} (${nextScene.stage}) as the reference.`;
+      return "Attach/upload the nearest later-stage image as the reference.";
+    }
+
+    function renderPrompts() {
+      const v = getValues();
+      $("finalPromptText").textContent = finalImagePrompt(v);
+      $("closeUpPromptText").textContent = closeUpImagePrompt(v);
+      $("reversePromptText").textContent = reversePrompt(v);
+      $("masterPromptText").textContent = masterPrompt(v);
+      $("continuityPromptText").textContent = continuity(v);
+      $("negativePromptText").textContent = v.negativePrompt;
+      $("handoffPromptText").textContent = handoffPrompt(v);
+      $("audioCaptionPromptText").textContent = audioCaptionPrompt(v);
+    }
+
+    function renderSceneSelector() {
+      const holder = $("sceneSelector");
+      if (!holder) return;
+      const sorted = [...scenes].sort((a, b) => a.id - b.id);
+      const active = getActiveScenes();
+      holder.innerHTML = `
+        <div class="scene-selector-head">
+          <div>
+            <h3>Select scenes for video length</h3>
+            <p>Keep the core stages for a short video. Turn on extra stages for longer cleaning, repair, painting, lighting, and decoration sequences.</p>
+          </div>
+          <span class="scene-count-pill">${active.length} images / ${Math.max(active.length - 1, 0)} clips</span>
+        </div>
+        <div class="scene-choice-grid">
+          ${sorted.map(scene => {
+            const checked = isSceneEnabled(scene);
+            const disabled = scene.locked ? "disabled" : "";
+            const badge = scene.locked ? "Required" : scene.enabled === false ? "Extra" : "Selected";
+            return `<label class="scene-choice" for="scene-toggle-${sceneKey(scene)}">
+              <input id="scene-toggle-${sceneKey(scene)}" class="scene-toggle" data-scene="${scene.id}" type="checkbox" ${checked ? "checked" : ""} ${disabled} />
+              <span>
+                <strong>${escapeHtml(scene.stage)}</strong>
+                <span>${escapeHtml(scene.videoState || scene.description)}</span>
+                <span class="badge">${badge}</span>
+              </span>
+            </label>`;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderImageRows() {
+      const v = getValues();
+      const tbody = $("imageSceneRows");
+      tbody.innerHTML = getReverseImageScenes().map(scene => {
+        const prompt = sceneImagePrompt(scene, v);
+        const key = `image-scene-${sceneKey(scene)}`;
+        setTimeout(() => { const el = $(key); if (el) el.textContent = prompt; }, 0);
+        return `<tr>
+          <td><strong>${escapeHtml(sceneLabel(scene))}</strong></td>
+          <td>${escapeHtml(scene.stage)}</td>
+          <td>${escapeHtml(referenceImageForScene(scene))}</td>
+          <td>${escapeHtml(scene.duration)}</td>
+          <td><div class="prompt-box"><div class="prompt-head"><span>Short image prompt</span></div><pre id="${key}"></pre></div></td>
+          <td><div class="scene-actions"><button class="mini copy-dynamic" data-text="${encodeURIComponent(prompt)}" type="button">Copy</button>${scene.custom ? `<button class="mini danger delete-scene" data-scene="${scene.id}" type="button">Delete</button>` : ""}</div></td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderVideoRows() {
+      const v = getValues();
+      const tbody = $("videoSceneRows");
+      tbody.innerHTML = getForwardPairs().map(([start, end], index) => {
+        const prompt = transitionPrompt(start, end, v);
+        const instruction = toolInstruction(v);
+        const key = `video-clip-${index + 1}`;
+        setTimeout(() => { const el = $(key); if (el) el.textContent = prompt; }, 0);
+        return `<tr>
+          <td><strong>Clip ${index + 1}</strong></td>
+          <td>${escapeHtml(sceneLabel(start))} → ${escapeHtml(sceneLabel(end))}</td>
+          <td>${escapeHtml(videoDurationFor(v, start.id, end.id))}</td>
+          <td><div class="prompt-box"><div class="prompt-head"><span>Short video prompt</span></div><pre id="${key}"></pre></div></td>
+          <td>${escapeHtml(instruction)}</td>
+          <td><div class="scene-actions"><button class="mini copy-dynamic" data-text="${encodeURIComponent(prompt)}" type="button">Copy Prompt</button><button class="mini copy-dynamic secondary" data-text="${encodeURIComponent(instruction)}" type="button">Copy Tool Note</button></div></td>
+        </tr>`;
+      }).join("");
+    }
+
+    function renderPreview() {
+      const v = getValues();
+      const totalClips = getForwardPairs().length;
+      const activeScenes = getActiveScenes();
+      const secondsPerClip = v.durationStyle === "short" ? [3, 4] : v.durationStyle === "long" ? [7, 10] : [4, 5];
+      const estimatedLength = `${totalClips * secondsPerClip[0]}–${totalClips * secondsPerClip[1]} sec`;
+      $("projectPreview").innerHTML = `
+        <div class="preview-item"><strong>Deity</strong><span>${escapeHtml(v.deityName)}</span></div>
+        <div class="preview-item"><strong>Architecture</strong><span>${escapeHtml(v.templeStyle)}</span></div>
+        <div class="preview-item"><strong>Output</strong><span>${v.verticalFormat ? "Vertical 9:16" : "Custom framing"}, ${estimatedLength}</span></div>
+        <div class="preview-item"><strong>Scenes / Clips</strong><span>${activeScenes.length} selected keyframes, ${totalClips} transformation clips</span></div>
+        <div class="preview-item"><strong>Reference lock</strong><span>${escapeHtml(v.referenceLock || "Not set")}</span></div>
+        <div class="preview-item"><strong>Sound mood</strong><span>${escapeHtml(v.musicMood || "Not set")}</span></div>
+        <div class="preview-item"><strong>Negative prompts</strong><span>${v.includeNegative ? "Included" : "Hidden for cleaner prompts"}</span></div>
+      `;
+    }
+
+    function renderAll() {
+      renderPrompts();
+      renderSceneSelector();
+      renderImageRows();
+      renderVideoRows();
+      renderPreview();
+      bindDynamicButtons();
+    }
+
+    function bindDynamicButtons() {
+      document.querySelectorAll(".copy-dynamic").forEach(btn => {
+        btn.onclick = () => copyText(decodeURIComponent(btn.dataset.text));
+      });
+      document.querySelectorAll(".delete-scene").forEach(btn => {
+        btn.onclick = () => {
+          const id = Number(btn.dataset.scene);
+          scenes = scenes.filter(s => s.id !== id);
+          renderAll();
+          showToast("Scene deleted");
+        };
+      });
+      document.querySelectorAll(".scene-toggle").forEach(input => {
+        input.onchange = () => {
+          const id = Number(input.dataset.scene);
+          const scene = scenes.find(s => s.id === id);
+          if (!scene || scene.locked) return;
+          scene.enabled = input.checked;
+          renderAll();
+          showToast(input.checked ? "Scene added to timeline" : "Scene hidden");
+        };
+      });
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Copied");
+      } catch (err) {
+        const temp = document.createElement("textarea");
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        showToast("Copied");
+      }
+    }
+
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+
+    function csvEscape(value) {
+      return `"${String(value).replace(/"/g, '""')}"`;
+    }
+
+    function downloadFile(filename, content, type = "text/plain") {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function imageCsv() {
+      const v = getValues();
+      const rows = [["Scene", "Stage", "Reference Image To Attach", "Duration", "Prompt", "Instruction"]];
+      getReverseImageScenes().forEach(scene => rows.push([
+        sceneLabel(scene),
+        scene.stage,
+        referenceImageForScene(scene),
+        scene.duration,
+        sceneImagePrompt(scene, v),
+        scene.reverseInstruction
+      ]));
+      return rows.map(row => row.map(csvEscape).join(",")).join("\n");
+    }
+
+    function videoCsv() {
+      const v = getValues();
+      const rows = [["Clip", "Start", "End", "Duration", "Prompt", "Tool Instructions"]];
+      getForwardPairs().forEach(([start, end], index) => rows.push([
+        `Clip ${index + 1}`,
+        sceneLabel(start),
+        sceneLabel(end),
+        videoDurationFor(v, start.id, end.id),
+        transitionPrompt(start, end, v),
+        toolInstruction(v)
+      ]));
+      return rows.map(row => row.map(csvEscape).join(",")).join("\n");
+    }
+
+    function fullPackageMarkdown() {
+      const v = getValues();
+      const selectedTimeline = getActiveScenes().map(scene => `${sceneLabel(scene)}: ${scene.stage}`).join("\n");
+      const imagePrompts = getReverseImageScenes().map(scene => `### ${sceneLabel(scene)}: ${scene.stage}\n\nReference image to attach: ${referenceImageForScene(scene)}\n\nDuration: ${scene.duration}\n\nInstruction: ${scene.reverseInstruction}\n\n\`\`\`text\n${sceneImagePrompt(scene, v)}\n\`\`\``).join("\n\n");
+      const videoPrompts = getForwardPairs().map(([start, end], index) => `### Clip ${index + 1}: ${sceneLabel(start)} → ${sceneLabel(end)}\n\nDuration: ${videoDurationFor(v, start.id, end.id)}\n\nTool instruction: ${toolInstruction(v)}\n\n\`\`\`text\n${transitionPrompt(start, end, v)}\n\`\`\``).join("\n\n");
+      return `# AI Temple Renovation Prompt Sheet
+
+## Project Variables
+
+- Deity: ${v.deityName}
+- Temple style: ${v.templeStyle}
+- Location style: ${v.locationStyle}
+- Material: ${v.material}
+- Visual treatment: ${v.visualTreatment}
+- Reference lock: ${v.referenceLock}
+- Final lighting: ${v.finalLighting}
+- Camera angle: ${v.cameraAngle}
+- Mood: ${v.mood}
+- Decor: ${v.decorStyle}
+- Special elements: ${v.specialElements}
+- Music mood: ${v.musicMood}
+- Caption style: ${v.captionStyle}
+- Negative prompts included: ${v.includeNegative ? "Yes" : "No"}
+- Target tool: ${v.targetTool}
+
+## Selected Timeline
+
+${selectedTimeline}
+
+## Master Prompt
+
+\`\`\`text
+${masterPrompt(v)}
+\`\`\`
+
+## Final Image Prompt
+
+\`\`\`text
+${finalImagePrompt(v)}
+\`\`\`
+
+## Optional Scene 7 Close-Up Prompt
+
+Reference image to attach: Attach/upload the Scene 6 final image as the reference.
+
+\`\`\`text
+${closeUpImagePrompt(v)}
+\`\`\`
+
+## Continuity Instruction
+
+\`\`\`text
+${continuity(v)}
+\`\`\`
+
+## Negative Prompt Library
+
+\`\`\`text
+${v.negativePrompt}
+\`\`\`
+
+## Last-Frame Handoff Workflow
+
+\`\`\`text
+${handoffPrompt(v)}
+\`\`\`
+
+## Audio and Caption Direction
+
+\`\`\`text
+${audioCaptionPrompt(v)}
+\`\`\`
+
+## Reverse Image Keyframes
+
+${imagePrompts}
+
+## Forward Video Transformations
+
+${videoPrompts}
+
+## Editing Notes
+
+- Stitch clips in the selected timeline order shown above.
+- Use the extracted last frame of each clip as the first-frame continuity reference for the next clip whenever possible.
+- Use short crossfades only if the frame handoff has a small visual jump.
+- Add temple bells, conch, soft ambience, and properly licensed devotional music.
+- Keep text overlays minimal, respectful, and secondary to the temple.
+`;
+    }
+
+    function packageJson() {
+      const v = getValues();
+      return JSON.stringify({
+        project: "AI Temple Renovation Prompt Studio",
+        variables: v,
+        continuity: continuity(v),
+        finalImagePrompt: finalImagePrompt(v),
+        closeUpImagePrompt: closeUpImagePrompt(v),
+        reversePrompt: reversePrompt(v),
+        masterPrompt: masterPrompt(v),
+        handoffPrompt: handoffPrompt(v),
+        audioCaptionPrompt: audioCaptionPrompt(v),
+        selectedTimeline: getActiveScenes().map(scene => ({ label: sceneLabel(scene), stage: scene.stage, id: scene.id })),
+        reverseImageScenes: getReverseImageScenes().map(scene => ({ ...scene, referenceImageToAttach: referenceImageForScene(scene), prompt: sceneImagePrompt(scene, v) })),
+        videoClips: getForwardPairs().map(([start, end], index) => ({
+          clip: index + 1,
+          startScene: sceneLabel(start),
+          endScene: sceneLabel(end),
+          startSceneId: start.id,
+          endSceneId: end.id,
+          duration: videoDurationFor(v, start.id, end.id),
+          prompt: transitionPrompt(start, end, v),
+          toolInstruction: toolInstruction(v)
+        }))
+      }, null, 2);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function saveLocally() {
+      const data = { values: getValues(), scenes };
+      localStorage.setItem("templePromptStudio", JSON.stringify(data));
+      showToast("Saved locally");
+    }
+
+    function loadLocally() {
+      const raw = localStorage.getItem("templePromptStudio");
+      if (!raw) return false;
+      try {
+        const data = JSON.parse(raw);
+        if (data.values) {
+          Object.entries(data.values).forEach(([key, value]) => {
+            const el = $(key);
+            if (!el) return;
+            setFieldValue(key, value);
+          });
+        }
+        if (Array.isArray(data.scenes)) scenes = data.scenes;
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function applyMissingDefaults() {
+      const p = presets[$("preset").value] || presets.shiva;
+      const defaults = {
+        visualTreatment: p.visualTreatment || presets.generic.visualTreatment,
+        referenceLock: p.referenceLock || presets.generic.referenceLock,
+        musicMood: p.musicMood || presets.generic.musicMood,
+        captionStyle: p.captionStyle || presets.generic.captionStyle
+      };
+      Object.entries(defaults).forEach(([key, value]) => {
+        const el = $(key);
+        if (el && !el.value.trim()) el.value = value;
+      });
+      if ($("negativePrompt").value.trim() === oldDefaultNegative) $("negativePrompt").value = defaultNegative;
+    }
+
+    function applySceneInstructionDefaults() {
+      const savedById = new Map(scenes.map(scene => [scene.id, scene]));
+      const builtInIds = new Set(builtInScenes.map(scene => scene.id));
+      const mergedBuiltIns = builtInScenes.map(defaultScene => {
+        const saved = savedById.get(defaultScene.id) || {};
+        return {
+          ...defaultScene,
+          enabled: defaultScene.locked ? true : saved.enabled ?? defaultScene.enabled
+        };
+      });
+      const customScenes = scenes
+        .filter(scene => !builtInIds.has(scene.id))
+        .map(scene => ({ enabled: true, custom: true, ...scene }));
+      scenes = [...mergedBuiltIns, ...customScenes].sort((a, b) => b.id - a.id);
+    }
+
+    function initEvents() {
+      $("preset").addEventListener("change", e => fillPreset(e.target.value));
+      document.querySelectorAll("input, select, textarea").forEach(el => {
+        el.addEventListener("input", renderAll);
+        el.addEventListener("change", renderAll);
+      });
+      $("generateBtn").addEventListener("click", () => { renderAll(); showToast("Prompts generated"); });
+      $("saveBtn").addEventListener("click", saveLocally);
+      $("loadSampleBtn").addEventListener("click", () => { $("preset").value = "shiva"; fillPreset("shiva"); showToast("Sample loaded"); });
+      $("resetAll").addEventListener("click", () => {
+        if (!confirm("Reset the form and local saved data?")) return;
+        localStorage.removeItem("templePromptStudio");
+        scenes = builtInScenes.map(scene => ({ ...scene }));
+        $("preset").value = "shiva";
+        $("negativePrompt").value = defaultNegative;
+        fillPreset("shiva");
+        showToast("Reset complete");
+      });
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          document.querySelectorAll(".tab-panel").forEach(panel => panel.style.display = "none");
+          $(btn.dataset.tab).style.display = "block";
+        });
+      });
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", () => copyText($(btn.dataset.copy).textContent));
+      });
+      $("copyAllImages").addEventListener("click", () => {
+        const v = getValues();
+        const text = getReverseImageScenes().map(scene => `${sceneLabel(scene)} - ${scene.stage}\nReference image to attach: ${referenceImageForScene(scene)}\n\n${sceneImagePrompt(scene, v)}`).join("\n\n---\n\n");
+        copyText(text);
+      });
+      $("copyAllVideos").addEventListener("click", () => {
+        const v = getValues();
+        const text = getForwardPairs().map(([start, end], index) => `Clip ${index + 1}: ${start.stage} to ${end.stage}\n${transitionPrompt(start, end, v)}\n\nTool note: ${toolInstruction(v)}`).join("\n\n---\n\n");
+        copyText(text);
+      });
+      $("downloadImageCsv").addEventListener("click", () => downloadFile("temple-image-prompts.csv", imageCsv(), "text/csv"));
+      $("downloadVideoCsv").addEventListener("click", () => downloadFile("temple-video-prompts.csv", videoCsv(), "text/csv"));
+      $("downloadMarkdown").addEventListener("click", () => downloadFile("temple-renovation-prompt-sheet.md", fullPackageMarkdown(), "text/markdown"));
+      $("downloadJson").addEventListener("click", () => downloadFile("temple-renovation-prompt-package.json", packageJson(), "application/json"));
+      $("copyPackage").addEventListener("click", () => copyText(fullPackageMarkdown()));
+      $("addScene").addEventListener("click", () => $("customSceneEditor").style.display = "block");
+      $("cancelCustomScene").addEventListener("click", () => $("customSceneEditor").style.display = "none");
+      $("saveCustomScene").addEventListener("click", () => {
+        const id = Number($("customSceneId").value.trim());
+        const stage = $("customStage").value.trim();
+        const duration = $("customDuration").value.trim() || "4 sec";
+        const description = $("customDescription").value.trim();
+        if (!id || !stage || !description) {
+          alert("Please enter scene number, stage name, and description.");
+          return;
+        }
+        if (scenes.some(scene => scene.id === id)) {
+          alert("That scene number is already used. Try a decimal number between two stages, like 5.8.");
+          return;
+        }
+        scenes.push({
+          id,
+          stage,
+          enabled: true,
+          custom: true,
+          duration,
+          description,
+          reverseInstruction: "Custom scene. Use the nearest later-stage image as reference and preserve continuity.",
+          nextMotion: "Smooth cinematic time-lapse transformation with stable architecture and devotional atmosphere."
+        });
+        scenes.sort((a, b) => b.id - a.id);
+        $("customSceneId").value = "";
+        $("customStage").value = "";
+        $("customDuration").value = "";
+        $("customDescription").value = "";
+        $("customSceneEditor").style.display = "none";
+        renderAll();
+        showToast("Custom scene added");
+      });
+    }
+
+    function init() {
+      initPresetSelect();
+      initOptionSelects();
+      $("negativePrompt").value = defaultNegative;
+      const loaded = loadLocally();
+      if (!loaded) fillPreset("shiva");
+      applyMissingDefaults();
+      applySceneInstructionDefaults();
+      initEvents();
+      renderAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
