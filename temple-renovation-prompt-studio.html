@@ -1015,6 +1015,18 @@
           </div>
         </div>
 
+        <div class="field-row">
+          <div>
+            <label for="videoPromptMode">Video prompt mode</label>
+            <select id="videoPromptMode">
+              <option value="startOnly">Start image + action only</option>
+              <option value="startEnd">Start + end keyframes</option>
+            </select>
+            <p class="field-help">Use start image + action when a tool struggles to transform Scene 1 into Scene 2 using two image references.</p>
+          </div>
+          <div></div>
+        </div>
+
         <div>
           <label for="decorStyle">Decor style</label>
           <select id="decorStyle"></select>
@@ -1197,7 +1209,7 @@
           <thead>
             <tr>
               <th>Clip</th>
-              <th>Start → End</th>
+              <th>Start / Target</th>
               <th>Duration</th>
               <th>Video prompt</th>
               <th>Tool instructions</th>
@@ -2080,6 +2092,7 @@
         cameraAngle: $("cameraAngle").value.trim(),
         mood: $("mood").value.trim(),
         durationStyle: $("durationStyle").value,
+        videoPromptMode: $("videoPromptMode").value,
         decorStyle: $("decorStyle").value.trim(),
         specialElements: $("specialElements").value.trim(),
         musicMood: $("musicMood").value.trim(),
@@ -2106,6 +2119,10 @@
 
     function isTempleWorkflow(v) {
       return (v.workflowTemplate || "temple") === "temple";
+    }
+
+    function usesStartOnlyVideo(v) {
+      return (v.videoPromptMode || "startOnly") === "startOnly";
     }
 
     function fillPreset(key) {
@@ -2238,7 +2255,21 @@
         ? "architecture, framing, silhouette, stairs, courtyard, and camera"
         : "main structure, framing, footprint, roofline, entrance, surroundings, and camera";
       const workType = isTempleWorkflow(v) ? "renovation" : "construction";
-      const base = `Use start and end images as references. Keep ${structureLock} stable. Show workers continuously doing the ${workType} from first frame to last frame. Prefer smooth time-lapse, not chaotic morphing. Save the last frame for the next clip.`;
+      const referenceMode = usesStartOnlyVideo(v)
+        ? "Use only the start image as the image reference. Do not attach the next scene image for this clip; use it only as your own visual target when reviewing the result."
+        : "Use start and end images as references.";
+      const base = `${referenceMode} Keep ${structureLock} stable. Show workers continuously doing the ${workType} from first frame to last frame. Prefer smooth time-lapse, not chaotic morphing. Save the last frame for the next clip.`;
+      if (usesStartOnlyVideo(v)) {
+        const startOnlyMap = {
+          generic: `${base} Generate a smooth image-to-video action clip from the single start image.`,
+          runway: `${base} Use image-to-video from the first keyframe only. Keep camera motion slow and cinematic. If Extend is used, begin from the saved last frame.`,
+          pika: `${base} Use image-to-video with a concise action prompt. Regenerate with stronger composition-lock wording if the structure drifts.`,
+          luma: `${base} Use the start image as the only keyframe if the tool supports it. Keep motion natural, cinematic, and stable.`,
+          kling: `${base} Use image-to-video from the start frame only. Keep camera movement subtle and avoid changing the main silhouette.`,
+          comfyui: `${base} Use the start image in your ComfyUI/Wan workflow. Generate at lower resolution first, keep the seed and camera settings stable, then upscale only the best results.`
+        };
+        return startOnlyMap[v.targetTool] || startOnlyMap.generic;
+      }
       const map = {
         generic: `${base} Generate a smooth image-to-video transformation clip.`,
         runway: `${base} Use the first keyframe as the start frame and the second keyframe as the end frame. Keep camera motion slow and cinematic. If Extend is used, begin from the saved last frame.`,
@@ -2256,7 +2287,30 @@
       return startId === 1 ? "4 sec" : "5 sec";
     }
 
+    function clipLabel(startScene, endScene, v) {
+      return usesStartOnlyVideo(v)
+        ? `${sceneLabel(startScene)} start image + action toward ${sceneLabel(endScene)}`
+        : `${sceneLabel(startScene)} → ${sceneLabel(endScene)}`;
+    }
+
+    function startOnlyActionPrompt(startScene, endScene, v) {
+      const startState = startScene.videoState || startScene.description;
+      const endState = endScene.videoState || endScene.description;
+      const action = startScene.nextMotion || endScene.nextMotion || `move the scene toward ${endState}`;
+      if (endScene.id === 7) {
+        if (!isTempleWorkflow(v)) {
+          return `Use only the attached start image. Slow final detail video from ${startState}. Action: ${action} Gently zoom/push in to finished entrance, clean paint, windows, exterior lights, landscaping, polished materials, and ${v.specialElements}. Keep the same project and camera feel. No sudden camera jumps or warping.${negativeClause(v, " Negative: ")}`;
+        }
+        return `Use only the attached start image. Slow devotional ending video from ${startState}. Action: ${action} Gently zoom/push in to glowing diyas, flowers, bells, carvings, sanctum doorway, and ${v.specialElements}. Keep the same temple and camera feel. No sudden camera jumps or warping.${negativeClause(v, " Negative: ")}`;
+      }
+      if (!isTempleWorkflow(v)) {
+        return `Use only the attached start image. High-speed construction time-lapse from ${startState}. Action: ${action} Workers visible throughout, actively clearing, building, painting, finishing, or decorating as needed. Aim toward ${endState}, but do not change the fixed camera, layout, or structure suddenly.${negativeClause(v, " Negative: ")}`;
+      }
+      return `Use only the attached start image. High-speed temple renovation time-lapse from ${startState}. Action: ${action} Workers visible throughout, actively cleaning, repairing, painting, or decorating as needed. Keep workers respectful and outside sacred idol areas. Aim toward ${endState}, but do not change the fixed camera, layout, or temple architecture suddenly.${negativeClause(v, " Negative: ")}`;
+    }
+
     function transitionPrompt(startScene, endScene, v) {
+      if (usesStartOnlyVideo(v)) return startOnlyActionPrompt(startScene, endScene, v);
       const startState = startScene.videoState || startScene.description;
       const endState = endScene.videoState || endScene.description;
       if (endScene.id === 7) {
@@ -2419,7 +2473,7 @@
         setTimeout(() => { const el = $(key); if (el) el.textContent = prompt; }, 0);
         return `<tr>
           <td><strong>Clip ${index + 1}</strong></td>
-          <td>${escapeHtml(sceneLabel(start))} → ${escapeHtml(sceneLabel(end))}</td>
+          <td>${escapeHtml(clipLabel(start, end, v))}</td>
           <td>${escapeHtml(videoDurationFor(v, start.id, end.id))}</td>
           <td><div class="prompt-box"><div class="prompt-head"><span>Short video prompt</span></div><pre id="${key}"></pre></div></td>
           <td>${escapeHtml(instruction)}</td>
@@ -2440,6 +2494,7 @@
         <div class="preview-item"><strong>${escapeHtml(workflow.structureLabel)}</strong><span>${escapeHtml(v.templeStyle)}</span></div>
         <div class="preview-item"><strong>Output</strong><span>${v.verticalFormat ? "Vertical 9:16" : "Custom framing"}, ${estimatedLength}</span></div>
         <div class="preview-item"><strong>Scenes / Clips</strong><span>${activeScenes.length} selected keyframes, ${totalClips} transformation clips</span></div>
+        <div class="preview-item"><strong>Video mode</strong><span>${usesStartOnlyVideo(v) ? "Start image + action only" : "Start + end keyframes"}</span></div>
         <div class="preview-item"><strong>Reference lock</strong><span>${escapeHtml(v.referenceLock || "Not set")}</span></div>
         <div class="preview-item"><strong>Sound mood</strong><span>${escapeHtml(v.musicMood || "Not set")}</span></div>
         <div class="preview-item"><strong>Negative prompts</strong><span>${v.includeNegative ? "Included" : "Hidden for cleaner prompts"}</span></div>
@@ -2534,11 +2589,10 @@
 
     function videoCsv() {
       const v = getValues();
-      const rows = [["Clip", "Start", "End", "Duration", "Prompt", "Tool Instructions"]];
+      const rows = [["Clip", "Start / Target", "Duration", "Prompt", "Tool Instructions"]];
       getForwardPairs().forEach(([start, end], index) => rows.push([
         `Clip ${index + 1}`,
-        sceneLabel(start),
-        sceneLabel(end),
+        clipLabel(start, end, v),
         videoDurationFor(v, start.id, end.id),
         transitionPrompt(start, end, v),
         toolInstruction(v)
@@ -2551,7 +2605,7 @@
       const workflow = getWorkflow(v.workflowTemplate);
       const selectedTimeline = getActiveScenes().map(scene => `${sceneLabel(scene)}: ${scene.stage}`).join("\n");
       const imagePrompts = getReverseImageScenes().map(scene => `### ${sceneLabel(scene)}: ${scene.stage}\n\nReference image to attach: ${referenceImageForScene(scene)}\n\nDuration: ${scene.duration}\n\nInstruction: ${scene.reverseInstruction}\n\n\`\`\`text\n${sceneImagePrompt(scene, v)}\n\`\`\``).join("\n\n");
-      const videoPrompts = getForwardPairs().map(([start, end], index) => `### Clip ${index + 1}: ${sceneLabel(start)} → ${sceneLabel(end)}\n\nDuration: ${videoDurationFor(v, start.id, end.id)}\n\nTool instruction: ${toolInstruction(v)}\n\n\`\`\`text\n${transitionPrompt(start, end, v)}\n\`\`\``).join("\n\n");
+      const videoPrompts = getForwardPairs().map(([start, end], index) => `### Clip ${index + 1}: ${clipLabel(start, end, v)}\n\nDuration: ${videoDurationFor(v, start.id, end.id)}\n\nTool instruction: ${toolInstruction(v)}\n\n\`\`\`text\n${transitionPrompt(start, end, v)}\n\`\`\``).join("\n\n");
       const editingAudioNote = isTempleWorkflow(v)
         ? "Add temple bells, conch, soft ambience, and properly licensed devotional music."
         : "Add construction ambience, tool sounds, subtle percussion, and properly licensed music.";
@@ -2578,6 +2632,7 @@
 - Caption style: ${v.captionStyle}
 - Negative prompts included: ${v.includeNegative ? "Yes" : "No"}
 - Target tool: ${v.targetTool}
+- Video prompt mode: ${usesStartOnlyVideo(v) ? "Start image + action only" : "Start + end keyframes"}
 
 ## Selected Timeline
 
@@ -2662,6 +2717,8 @@ ${videoPrompts}
         reverseImageScenes: getReverseImageScenes().map(scene => ({ ...scene, referenceImageToAttach: referenceImageForScene(scene), prompt: sceneImagePrompt(scene, v) })),
         videoClips: getForwardPairs().map(([start, end], index) => ({
           clip: index + 1,
+          label: clipLabel(start, end, v),
+          videoPromptMode: v.videoPromptMode,
           startScene: sceneLabel(start),
           endScene: sceneLabel(end),
           startSceneId: start.id,
@@ -2781,7 +2838,7 @@ ${videoPrompts}
       });
       $("copyAllVideos").addEventListener("click", () => {
         const v = getValues();
-        const text = getForwardPairs().map(([start, end], index) => `Clip ${index + 1}: ${start.stage} to ${end.stage}\n${transitionPrompt(start, end, v)}\n\nTool note: ${toolInstruction(v)}`).join("\n\n---\n\n");
+        const text = getForwardPairs().map(([start, end], index) => `Clip ${index + 1}: ${clipLabel(start, end, v)}\n${transitionPrompt(start, end, v)}\n\nTool note: ${toolInstruction(v)}`).join("\n\n---\n\n");
         copyText(text);
       });
       $("downloadImageCsv").addEventListener("click", () => downloadFile(`${$("workflowTemplate").value}-image-prompts.csv`, imageCsv(), "text/csv"));
