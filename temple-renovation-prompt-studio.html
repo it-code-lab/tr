@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Temple Renovation Prompt Studio</title>
+  <title>AI Transformation Prompt Studio</title>
   <style>
     :root {
       --bg: #f7f3ea;
@@ -844,9 +844,9 @@
   <header>
     <div class="container hero">
       <div>
-        <span class="pill">AI Short-Form Temple Renovation Workflow</span>
-        <h1>Temple Renovation Prompt Studio</h1>
-        <p class="subtitle">Create reusable prompt packages for Hindu temple restoration time-lapse shorts. Build the final restored image first, reverse-engineer earlier keyframes from it, then animate forward using frame-to-frame continuity.</p>
+        <span class="pill">AI Short-Form Transformation Workflow</span>
+        <h1>Transformation Prompt Studio</h1>
+        <p class="subtitle">Create reusable prompt packages for temple restorations, construction builds, and similar time-lapse shorts. Build the final image first, reverse-engineer earlier keyframes from it, then animate forward using frame-to-frame continuity.</p>
       </div>
       <div class="hero-card">
         <strong>Restored image first</strong>
@@ -927,13 +927,20 @@
     <div class="grid two" id="generator">
       <section>
         <h2>2. Project variables</h2>
-        <p class="section-note">Choose a deity preset, then mix and match list values for style, location, lighting, camera, decor, sound, and captions. These values power every prompt.</p>
+        <p id="projectVariableNote" class="section-note">Choose a workflow and preset, then mix and match list values for style, location, lighting, camera, decor, sound, and captions. These values power every prompt.</p>
 
         <div class="field-row">
           <div>
-            <label for="preset">Deity preset</label>
+            <label for="workflowTemplate">Workflow template</label>
+            <select id="workflowTemplate"></select>
+          </div>
+          <div>
+            <label id="presetLabel" for="preset">Deity preset</label>
             <select id="preset"></select>
           </div>
+        </div>
+
+        <div class="field-row">
           <div>
             <label for="targetTool">Target video tool</label>
             <select id="targetTool">
@@ -962,11 +969,11 @@
 
         <div class="field-row">
           <div>
-            <label for="deityName">Deity name</label>
+            <label id="subjectLabel" for="deityName">Deity name</label>
             <select id="deityName"></select>
           </div>
           <div>
-            <label for="templeStyle">Temple style</label>
+            <label id="structureLabel" for="templeStyle">Temple style</label>
             <select id="templeStyle"></select>
           </div>
         </div>
@@ -1014,7 +1021,7 @@
         </div>
 
         <div style="margin-top:12px;">
-          <label for="specialElements">Deity-specific elements</label>
+          <label id="specialElementsLabel" for="specialElements">Deity-specific elements</label>
           <select id="specialElements"></select>
         </div>
 
@@ -1033,7 +1040,7 @@
           <summary>Advanced safety and consistency settings</summary>
           <div class="checkbox-row">
             <input id="avoidDeityCloseup" type="checkbox" checked />
-            <label for="avoidDeityCloseup">Avoid close-up deity face generation</label>
+            <label id="avoidCloseupLabel" for="avoidDeityCloseup">Avoid close-up deity face generation</label>
           </div>
           <div class="checkbox-row">
             <input id="allowDevotees" type="checkbox" checked />
@@ -1068,14 +1075,14 @@
         </div>
 
         <div id="finalPrompt" class="tab-panel">
-          <h2>Step 1: Create Scene 6 final image</h2>
-          <p class="section-note">Start here. Copy this prompt, generate the fully restored temple image, then save that result as Scene 6. After that, go to section 3 and create Scene 5 using Scene 6 as the attached reference image.</p>
+          <h2 id="finalPromptTitle">Step 1: Create Scene 6 final image</h2>
+          <p id="finalPromptNote" class="section-note">Start here. Copy this prompt, generate the fully restored temple image, then save that result as Scene 6. After that, go to section 3 and create Scene 5 using Scene 6 as the attached reference image.</p>
           <div class="prompt-box">
             <div class="prompt-head"><span>Short image prompt</span><button class="mini copy-btn" data-copy="finalPromptText" type="button">Copy</button></div>
             <pre id="finalPromptText"></pre>
           </div>
-          <h3>Optional Scene 7 close-up ending</h3>
-          <p class="section-note">After Scene 6 is created, attach/upload the Scene 6 image and use this prompt to create a final close-up shot for the ending.</p>
+          <h3 id="closeUpPromptTitle">Optional Scene 7 close-up ending</h3>
+          <p id="closeUpPromptNote" class="section-note">After Scene 6 is created, attach/upload the Scene 6 image and use this prompt to create a final close-up shot for the ending.</p>
           <div class="prompt-box">
             <div class="prompt-head"><span>Short close-up prompt</span><button class="mini copy-btn" data-copy="closeUpPromptText" type="button">Copy</button></div>
             <pre id="closeUpPromptText"></pre>
@@ -1180,7 +1187,7 @@
 
     <section id="video-prompts">
       <h2>4. Forward video transformation prompts</h2>
-      <p class="section-note">After all selected keyframes are ready, animate forward through the selected timeline. Renovation clips ask workers to remain visible and active; the final close-up clip becomes a slow devotional ending when selected.</p>
+      <p id="videoPromptNote" class="section-note">After all selected keyframes are ready, animate forward through the selected timeline. Renovation clips ask workers to remain visible and active; the final close-up clip becomes a slow devotional ending when selected.</p>
       <div class="controls">
         <button id="copyAllVideos" type="button">Copy All Video Prompts</button>
         <button id="downloadVideoCsv" class="secondary" type="button">Download Video Prompt CSV</button>
@@ -1305,7 +1312,11 @@
         "Lord Ganesha",
         "Maa Lakshmi",
         "Maa Saraswati",
-        "chosen Hindu deity"
+        "chosen Hindu deity",
+        "modern family house",
+        "small commercial building",
+        "heritage haveli",
+        "community hall"
       ],
       visualTreatment: [
         "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style, highly detailed textures, respectful sacred realism, documentary style",
@@ -1315,7 +1326,9 @@
         "cinematic devotional short-film style, warm light, realistic architecture",
         "high-detail architectural visualization, realistic stone, clean vertical composition",
         "festival aarti cinematic style, warm lamps, realistic temple details",
-        "serene morning documentary style, soft light, sacred atmosphere"
+        "serene morning documentary style, soft light, sacred atmosphere",
+        "photorealistic construction time-lapse, architectural photography, 35mm lens, realistic workers, stable camera",
+        "cinematic real-estate transformation, clean vertical 9:16, realistic construction progress, natural light"
       ],
       referenceLock: [
         "lock temple silhouette, sanctum doorway, main stairs, pillar count, courtyard edges, and horizon line",
@@ -1325,7 +1338,9 @@
         "lock the marble arches, courtyard layout, central sanctum, stair alignment, and camera angle",
         "lock the entrance, stone pillars, courtyard path, flags, roofline, and horizon",
         "lock the lotus motifs, sanctum doorway, diya rows, steps, courtyard geometry, pillars, and camera height",
-        "lock the temple silhouette, lotus pond edge, steps, pillars, sanctum doorway, and horizon line"
+        "lock the temple silhouette, lotus pond edge, steps, pillars, sanctum doorway, and horizon line",
+        "lock the building footprint, roofline, window placement, doorway, driveway, boundary walls, and camera axis",
+        "lock the floor plan, columns, staircase, facade proportions, road edge, and camera height"
       ],
       templeStyle: [
         "ancient North Indian Nagara stone temple",
@@ -1341,7 +1356,11 @@
         "Odisha Kalinga-style stone temple with detailed tower carvings",
         "Hoysala-inspired soapstone temple with intricate star-shaped platform",
         "Himalayan stone temple with wooden details and mountain setting",
-        "small village Hindu temple with simple stone courtyard"
+        "small village Hindu temple with simple stone courtyard",
+        "modern two-story family house with clean facade and balcony",
+        "small commercial building with glass frontage and simple signage area",
+        "heritage haveli restored with arched windows and carved balconies",
+        "community hall with broad entrance, columns, and clean public courtyard"
       ],
       locationStyle: [
         "Varanasi riverside sacred setting near the Ganga",
@@ -1358,7 +1377,11 @@
         "Himalayan temple setting with misty mountains",
         "South Indian temple town street",
         "desert-edge Rajasthan temple courtyard",
-        "coastal temple setting near the sea"
+        "coastal temple setting near the sea",
+        "suburban construction plot with road access",
+        "urban street-side construction site",
+        "rural roadside construction site",
+        "old neighborhood renovation site"
       ],
       material: [
         "aged sandstone and white marble",
@@ -1374,7 +1397,10 @@
         "ancient grey stone with copper and brass details",
         "red sandstone and cream limestone",
         "weathered black stone and brass lamps",
-        "pale marble and carved teak wood accents"
+        "pale marble and carved teak wood accents",
+        "concrete, brick, plaster, glass, steel railings, and painted exterior walls",
+        "reinforced concrete frame, red brick walls, cement plaster, and ceramic tiles",
+        "lime plaster, carved wood, stone flooring, and restored heritage details"
       ],
       finalLighting: [
         "golden sunrise with soft divine glow",
@@ -1390,7 +1416,10 @@
         "monsoon-cleared sunlight after rain",
         "late afternoon warm temple courtyard light",
         "night aarti lamp glow with incense haze",
-        "misty dawn with soft sacred light"
+        "misty dawn with soft sacred light",
+        "golden hour real-estate reveal with warm exterior lights",
+        "clean daylight construction reveal with realistic shadows",
+        "blue hour reveal with exterior lights and finished landscaping"
       ],
       cameraAngle: [
         "centered frontal wide-angle view with slow cinematic push-in",
@@ -1406,7 +1435,10 @@
         "wide courtyard view from temple gate",
         "three-quarter frontal view showing entrance and side pillars",
         "slow vertical reveal from steps to shikhara",
-        "close courtyard view facing sanctum doorway"
+        "close courtyard view facing sanctum doorway",
+        "fixed wide frontal view from the street",
+        "three-quarter front view showing entrance, driveway, and side wall",
+        "slow push-in from construction gate to finished facade"
       ],
       mood: [
         "peaceful, divine, majestic, devotional",
@@ -1421,7 +1453,10 @@
         "mysterious, ancient, reverent, hopeful",
         "festive, warm, devotional, cinematic",
         "serene, meditative, sacred, realistic",
-        "dramatic, uplifting, devotional, majestic"
+        "dramatic, uplifting, devotional, majestic",
+        "satisfying, realistic, industrious, uplifting",
+        "clean, modern, polished, aspirational",
+        "documentary, practical, progress-focused, satisfying"
       ],
       decorStyle: [
         "marigold garlands, brass diyas, saffron flags, rangoli, copper kalash, temple bells",
@@ -1435,7 +1470,10 @@
         "simple marigold garlands, brass lamps, clean rangoli, temple bells",
         "grand festival decor with lamps, flags, flowers, rangoli, and incense",
         "minimal restored temple decor with only diyas and flowers",
-        "night aarti setup with lamps, bells, incense, and flower offerings"
+        "night aarti setup with lamps, bells, incense, and flower offerings",
+        "finished landscaping, exterior lights, clean driveway, potted plants, neat boundary wall",
+        "modern interior furniture, curtains, wall art, warm ceiling lights, clean flooring",
+        "fresh paint, signage area, glass doors, planters, tidy paved entrance"
       ],
       specialElements: [
         "Nandi statue placed respectfully in front, trishul, damru motif, bilva leaves, rudraksha details",
@@ -1448,7 +1486,10 @@
         "veena motifs, swan motifs, lotus pond details, books used symbolically, temple bells",
         "deity-specific sacred symbols, flowers, lamps, bells, traditional Indian temple details",
         "temple bells, brass lamps, kalash, lotus motifs, incense, sacred symbols",
-        "carved pillars, sanctum doorway, bells, diyas, flowers, and traditional offerings"
+        "carved pillars, sanctum doorway, bells, diyas, flowers, and traditional offerings",
+        "scaffolding, workers, cement mixer, paint buckets, ladders, safety helmets",
+        "landscaping, driveway tiles, windows, balcony railing, exterior light fixtures",
+        "before-and-after construction details, tools, materials, and finished facade"
       ],
       musicMood: [
         "Om Namah Shivaya devotional feeling, temple bells, conch, low tanpura drone, soft damru texture, gradual aarti rise",
@@ -1461,7 +1502,10 @@
         "serene Saraswati vandana mood, veena texture, soft bells, tanpura drone, gentle morning ambience",
         "licensed devotional song mood, temple bells, conch, tanpura drone, soft percussion, rising final aarti",
         "instrumental bhajan mood, bells, conch, tanpura, soft tabla, warm devotional rise",
-        "quiet temple ambience, bells, wind, incense, tanpura drone, gentle aarti finish"
+        "quiet temple ambience, bells, wind, incense, tanpura drone, gentle aarti finish",
+        "upbeat cinematic construction time-lapse music, light percussion, satisfying progress rhythm",
+        "modern real-estate reveal music, warm pads, soft percussion, uplifting final hit",
+        "documentary construction ambience, tools, workers, subtle percussion, clean final rise"
       ],
       captionStyle: [
         "minimal respectful captions, 3-5 words, warm lower third, no loud effects",
@@ -1474,7 +1518,10 @@
         "minimal respectful captions, 3-5 words, subtle lower third, no clutter",
         "no captions, visuals and music only",
         "short restoration captions, small lower-third text, devotional tone",
-        "one final devotional phrase only, no captions during renovation"
+        "one final devotional phrase only, no captions during renovation",
+        "short progress captions, small lower-third text, no clutter",
+        "before to after captions, clean modern type, 3-5 words",
+        "no captions, construction sounds and music only"
       ]
     };
 
@@ -1607,6 +1654,38 @@
         musicMood: "serene Saraswati vandana mood, veena texture, soft bells, tanpura drone, gentle morning ambience",
         captionStyle: "minimal respectful captions, white-gold lower third, quiet devotional tone"
       },
+      modernHome: {
+        label: "Construction: Modern Home",
+        deityName: "modern family house",
+        templeStyle: "modern two-story family house with clean facade and balcony",
+        locationStyle: "suburban construction plot with road access",
+        material: "reinforced concrete frame, red brick walls, cement plaster, and ceramic tiles",
+        visualTreatment: "photorealistic construction time-lapse, architectural photography, 35mm lens, realistic workers, stable camera",
+        referenceLock: "lock the building footprint, roofline, window placement, doorway, driveway, boundary walls, and camera axis",
+        finalLighting: "golden hour real-estate reveal with warm exterior lights",
+        cameraAngle: "fixed wide frontal view from the street",
+        mood: "satisfying, realistic, industrious, uplifting",
+        decorStyle: "finished landscaping, exterior lights, clean driveway, potted plants, neat boundary wall",
+        specialElements: "scaffolding, workers, cement mixer, paint buckets, ladders, safety helmets",
+        musicMood: "upbeat cinematic construction time-lapse music, light percussion, satisfying progress rhythm",
+        captionStyle: "short progress captions, small lower-third text, no clutter"
+      },
+      commercialBuild: {
+        label: "Construction: Commercial",
+        deityName: "small commercial building",
+        templeStyle: "small commercial building with glass frontage and simple signage area",
+        locationStyle: "urban street-side construction site",
+        material: "concrete, brick, plaster, glass, steel railings, and painted exterior walls",
+        visualTreatment: "photorealistic construction time-lapse, architectural photography, 35mm lens, realistic workers, stable camera",
+        referenceLock: "lock the floor plan, columns, staircase, facade proportions, road edge, and camera height",
+        finalLighting: "clean daylight construction reveal with realistic shadows",
+        cameraAngle: "three-quarter front view showing entrance, driveway, and side wall",
+        mood: "documentary, practical, progress-focused, satisfying",
+        decorStyle: "fresh paint, signage area, glass doors, planters, tidy paved entrance",
+        specialElements: "before-and-after construction details, tools, materials, and finished facade",
+        musicMood: "documentary construction ambience, tools, workers, subtle percussion, clean final rise",
+        captionStyle: "before to after captions, clean modern type, 3-5 words"
+      },
       generic: {
         label: "Generic Hindu Temple",
         deityName: "chosen Hindu deity",
@@ -1626,6 +1705,7 @@
     };
 
     const defaultNegative = "warped architecture, melting stone, asymmetrical pillars, floating objects, modern buildings, western church architecture, low resolution, blurry, distorted deity face, damaged idol, extra limbs, cartoon, 3d render, watermark, text, chaotic crowds, disrespectful depiction";
+    const defaultConstructionNegative = "warped building, melting walls, impossible structure, floating objects, crooked roofline, mismatched windows, low resolution, blurry, cartoon, 3d render, watermark, random text, unsafe chaotic worksite, distorted workers, extra limbs";
     const oldDefaultNegative = "no horror, no disrespectful depiction, no damaged deity idol, no distorted deity face, no extra limbs, no broken anatomy, no cartoon, no anime, no futuristic elements, no modern city buildings, no western church architecture, no random text, no watermark, no logo, no low detail, no blur, no chaotic crowds, no political symbols";
 
     const builtInScenes = [
@@ -1787,6 +1867,172 @@
       }
     ];
 
+    const constructionScenes = [
+      {
+        id: 7,
+        stage: "Final detail close-up",
+        enabled: true,
+        duration: "3–5 sec",
+        reverseInstruction: "Optional ending. Attach/upload the Scene 6 completed image as the reference, then generate a close-up detail for the last shot.",
+        description: "close-up of finished entrance, lights, paint, windows, landscaping, and clean final details",
+        videoState: "final close-up detail ending",
+        changeCommand: "Create a close-up ending shot from the completed project. Focus on the finished entrance, exterior lights, clean paint, windows, landscaping, and polished details.",
+        nextMotion: "Final ending: slow push-in to finished details, warm light, clean surfaces, and a calm hold on the completed project."
+      },
+      {
+        id: 6,
+        stage: "Final completed reveal",
+        enabled: true,
+        locked: true,
+        duration: "4–5 sec",
+        reverseInstruction: "Start here. Do not attach a previous image. Generate this final completed image first and save it as Scene 6.",
+        description: "fully completed building, clean, painted, landscaped, lit, polished final reveal",
+        videoState: "completed final building reveal",
+        changeCommand: "Make this project fully completed, clean, painted, landscaped, and ready for final reveal with warm lights and polished surfaces.",
+        nextMotion: "Final scene: slow cinematic reveal with warm exterior lights, clean landscaping, and polished completed surfaces."
+      },
+      {
+        id: 5.6,
+        stage: "Decor and staging setup",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the staging setup stage.",
+        description: "decor and staging in progress, furniture, planters, lights, final touches not complete",
+        videoState: "decor and staging setup",
+        changeCommand: "Make the same project nearly finished with workers adding furniture, planters, exterior lights, signage area, and final staging. Keep it not fully complete yet.",
+        nextMotion: "Workers finish staging, lights, plants, and final details until the project becomes fully complete."
+      },
+      {
+        id: 5.3,
+        stage: "Lighting and landscaping",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the lighting and landscaping stage.",
+        description: "workers installing exterior lights, plants, driveway tiles, and landscaping",
+        videoState: "lighting and landscaping in progress",
+        changeCommand: "Make the same clean finished structure with workers installing exterior lights, plants, driveway tiles, and landscaping. No final staging yet.",
+        nextMotion: "Workers add landscaping, driveway finish, exterior lights, and clean final surroundings."
+      },
+      {
+        id: 5,
+        stage: "Clean finished structure, no decor",
+        enabled: true,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the Scene 6 final image as the reference, then paste this prompt. Remove decor and staging but keep the building clean and finished.",
+        description: "clean finished building, painted, no decor, no landscaping, ready for final touches",
+        videoState: "clean finished structure with no decor",
+        changeCommand: "Make the same building clean, painted, and finished, but remove decor, staging, landscaping, and final lights. It should look ready for final touches.",
+        nextMotion: "Lights, landscaping, and final polish are added gradually while workers remain active."
+      },
+      {
+        id: 4.6,
+        stage: "Painting and finishing",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the painting and finishing stage.",
+        description: "workers painting exterior, installing tiles, polishing surfaces, ladders and buckets visible",
+        videoState: "painting and finishing in progress",
+        changeCommand: "Make the same structure with painting and finishing in progress. Workers paint exterior walls, install tiles, polish surfaces, and use ladders and buckets. No decor or landscaping.",
+        nextMotion: "Workers paint, tile, and polish the structure until it becomes clean and finished."
+      },
+      {
+        id: 4,
+        stage: "Exterior shell complete",
+        enabled: true,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the Scene 5 image as the reference, then paste this prompt. Keep the shell complete, but remove paint and final finishes.",
+        description: "building shell complete, plastered, windows fitted, unpainted, no final finish",
+        videoState: "exterior shell complete but unfinished",
+        changeCommand: "Make the same building shell complete but unfinished. Walls are plastered, windows and doors are fitted, but no paint, no polish, no landscaping, no decor.",
+        nextMotion: "Paint, tiles, and finishes appear as workers complete the exterior."
+      },
+      {
+        id: 3.5,
+        stage: "Walls and roof work",
+        enabled: false,
+        duration: "4–5 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the wall and roof work stage.",
+        description: "brick walls rising, roof slab work, scaffolding, workers, concrete and dust",
+        videoState: "walls and roof construction",
+        changeCommand: "Make the same project under wall and roof construction. Brick walls rise, roof slab work is active, scaffolding, workers, concrete, and dust are visible. No plaster, no paint.",
+        nextMotion: "Workers build walls and roof, scaffolding remains active, the shell becomes complete."
+      },
+      {
+        id: 3,
+        stage: "Structural frame",
+        enabled: true,
+        duration: "4–5 sec",
+        reverseInstruction: "Attach/upload the Scene 4 image as the reference, then paste this prompt. Show the concrete frame under active construction.",
+        description: "concrete frame under construction, columns, beams, scaffolding, workers, tools",
+        videoState: "structural frame under construction",
+        changeCommand: "Make the same project a structural frame under active construction. Show columns, beams, scaffolding, workers, tools, cement, and dust. No walls complete, no paint.",
+        nextMotion: "Workers build columns and beams, materials move, the structure grows into walls and roof."
+      },
+      {
+        id: 2.5,
+        stage: "Foundation work",
+        enabled: false,
+        duration: "4 sec",
+        reverseInstruction: "Attach/upload the next later selected image as the reference, then create the foundation stage.",
+        description: "foundation excavation, rebar, concrete pour, workers, muddy ground, layout markings",
+        videoState: "foundation work",
+        changeCommand: "Make the same site in foundation work. Show excavation, rebar, concrete pour, workers, muddy ground, layout markings, and early construction materials.",
+        nextMotion: "Workers pour concrete and place rebar; the foundation turns into the first structural frame."
+      },
+      {
+        id: 2,
+        stage: "Site cleared",
+        enabled: true,
+        duration: "3–4 sec",
+        reverseInstruction: "Attach/upload the Scene 3 image as the reference, then paste this prompt. Remove structure and show the cleared site ready for construction.",
+        description: "cleared construction site, debris removed, level ground, layout markings, materials stacked",
+        videoState: "cleared construction site",
+        changeCommand: "Make the same site cleared and ready for construction. Debris is removed, ground is leveled, layout markings and material stacks are visible. No building frame yet.",
+        nextMotion: "Workers clear the site, level the ground, mark the layout, and prepare materials."
+      },
+      {
+        id: 1,
+        stage: "Messy starting site",
+        enabled: true,
+        locked: true,
+        duration: "3–4 sec",
+        reverseInstruction: "Attach/upload the Scene 2 image as the reference, then paste this prompt. Make it the messy opening hook.",
+        description: "messy old site, trash, broken ground, weeds, debris, abandoned materials",
+        videoState: "messy starting site with trash and debris",
+        changeCommand: "Make the same site messy and neglected. Add trash, weeds, broken ground, debris piles, old materials, and an abandoned construction feel.",
+        nextMotion: "Slow push-in toward the messy site, dust in the air, workers begin clearing and preparing."
+      }
+    ];
+
+    const workflowTemplates = {
+      temple: {
+        label: "Hindu temple renovation",
+        defaultPreset: "shiva",
+        scenes: builtInScenes,
+        presetLabel: "Deity preset",
+        subjectLabel: "Deity name",
+        structureLabel: "Temple style",
+        note: "Choose a deity preset, then mix and match list values for style, location, lighting, camera, decor, sound, and captions. These values power every prompt.",
+        subjectKind: "Hindu temple",
+        finalWord: "fully restored Hindu temple",
+        finalTitle: "AI Temple Renovation Prompt Sheet",
+        closeUpName: "devotional close-up"
+      },
+      construction: {
+        label: "Construction / building transformation",
+        defaultPreset: "modernHome",
+        scenes: constructionScenes,
+        presetLabel: "Project preset",
+        subjectLabel: "Project subject",
+        structureLabel: "Structure style",
+        note: "Choose a construction preset, then mix and match values for building type, site, materials, lighting, camera, finishing, sound, and captions. These values power every prompt.",
+        subjectKind: "building project",
+        finalWord: "completed building project",
+        finalTitle: "AI Construction Transformation Prompt Sheet",
+        closeUpName: "final detail close-up"
+      }
+    };
+
     let scenes = builtInScenes.map(scene => ({ ...scene }));
 
     const $ = (id) => document.getElementById(id);
@@ -1821,6 +2067,7 @@
 
     function getValues() {
       return {
+        workflowTemplate: $("workflowTemplate").value,
         preset: $("preset").value,
         targetTool: $("targetTool").value,
         deityName: $("deityName").value.trim(),
@@ -1843,6 +2090,22 @@
         includeNegative: $("includeNegative").checked,
         negativePrompt: $("negativePrompt").value.trim()
       };
+    }
+
+    function getWorkflow(key = $("workflowTemplate")?.value || "temple") {
+      return workflowTemplates[key] || workflowTemplates.temple;
+    }
+
+    function projectSubject(v) {
+      return v.deityName || "selected subject";
+    }
+
+    function structureKind(v) {
+      return v.templeStyle || "selected structure";
+    }
+
+    function isTempleWorkflow(v) {
+      return (v.workflowTemplate || "temple") === "temple";
     }
 
     function fillPreset(key) {
@@ -1869,12 +2132,50 @@
       select.value = "shiva";
     }
 
+    function initWorkflowSelect() {
+      const select = $("workflowTemplate");
+      select.innerHTML = Object.entries(workflowTemplates).map(([key, value]) => `<option value="${key}">${escapeHtml(value.label)}</option>`).join("");
+      select.value = "temple";
+    }
+
+    function applyWorkflowLabels() {
+      const workflow = getWorkflow();
+      $("presetLabel").textContent = workflow.presetLabel;
+      $("subjectLabel").textContent = workflow.subjectLabel;
+      $("structureLabel").textContent = workflow.structureLabel;
+      $("specialElementsLabel").textContent = isTempleWorkflow({ workflowTemplate: $("workflowTemplate").value }) ? "Deity-specific elements" : "Project details and props";
+      $("avoidCloseupLabel").textContent = isTempleWorkflow({ workflowTemplate: $("workflowTemplate").value }) ? "Avoid close-up deity face generation" : "Avoid distorted people and faces";
+      $("projectVariableNote").textContent = workflow.note;
+    }
+
+    function applyWorkflowTemplate(key) {
+      const workflow = getWorkflow(key);
+      $("workflowTemplate").value = key;
+      scenes = workflow.scenes.map(scene => ({ ...scene }));
+      const currentNegative = $("negativePrompt").value.trim();
+      if (key === "construction" && (currentNegative === defaultNegative || currentNegative === oldDefaultNegative)) {
+        $("negativePrompt").value = defaultConstructionNegative;
+      }
+      if (key === "temple" && currentNegative === defaultConstructionNegative) {
+        $("negativePrompt").value = defaultNegative;
+      }
+      $("preset").value = workflow.defaultPreset;
+      fillPreset(workflow.defaultPreset);
+      applyWorkflowLabels();
+      showToast(`${workflow.label} loaded`);
+    }
+
     function formatPrefix(v) {
       const base = v.visualTreatment || "hyper-realistic architectural photography, shot on 35mm lens, f/1.8, 8k resolution, Unreal Engine 5 render style";
       return v.verticalFormat ? `Vertical 9:16 ${base}` : base;
     }
 
     function respectfulClause(v) {
+      if (!isTempleWorkflow(v)) {
+        const parts = ["realistic", "highly detailed", "clean construction documentary look"];
+        if (!v.allowDevotees) parts.push("no people visible except active workers when the stage needs them");
+        return parts.join(", ");
+      }
       const parts = ["sacred", "respectful", "devotional", "realistic", "highly detailed"];
       if (v.avoidDeityCloseup) parts.push("avoid close-up deity face details; show sanctum and sacred symbols respectfully");
       if (!v.allowDevotees) parts.push("no people or devotees visible");
@@ -1882,6 +2183,9 @@
     }
 
     function continuity(v) {
+      if (!isTempleWorkflow(v)) {
+        return `Keep the same ${projectSubject(v)}, ${structureKind(v)}, camera angle (${v.cameraAngle}), and fixed details: ${v.referenceLock}. Do not redesign the project; only change construction stage, cleanliness, finish, decor, and light.`;
+      }
       return `Keep the same temple, ${v.deityName} identity, ${v.templeStyle}, camera angle (${v.cameraAngle}), and fixed details: ${v.referenceLock}. Do not redesign the temple; only change renovation stage, age, cleanliness, decor, and light.`;
     }
 
@@ -1890,31 +2194,51 @@
     }
 
     function finalImagePrompt(v) {
+      if (!isTempleWorkflow(v)) {
+        return `Masterpiece, ${formatPrefix(v)} of a completed ${projectSubject(v)}. Structure: ${structureKind(v)}, ${v.locationStyle}. Materials: highly detailed ${v.material}. ${v.cameraAngle}. Clean finished construction, painted surfaces, polished details, ${v.decorStyle}. Include ${v.specialElements}. Lighting: ${v.finalLighting}. Mood: ${v.mood}. ${respectfulClause(v)}. ${continuity(v)}${negativeClause(v)}`;
+      }
       return `Masterpiece, ${formatPrefix(v)} of a fully restored Hindu temple dedicated to ${v.deityName}. Architectural style: ${v.templeStyle}, ${v.locationStyle}. Materials: highly detailed ${v.material}. ${v.cameraAngle}. pristine clean carvings, perfectly repaired pillars, polished stone, glowing diyas, fresh flowers, ${v.decorStyle}. Include ${v.specialElements}. Lighting: Volumetric, ${v.finalLighting}. Mood: ${v.mood}. ${respectfulClause(v)}. ${continuity(v)}${negativeClause(v)}`;
     }
 
     function closeUpImagePrompt(v) {
+      if (!isTempleWorkflow(v)) {
+        return `Using the attached final completed image as reference, create a realistic close-up ending shot. Focus on the finished entrance, clean paint, windows, exterior lights, landscaping, polished materials, and ${v.specialElements}. Warm cinematic light, shallow depth of field, vertical 9:16. Keep the same ${projectSubject(v)} identity and materials.${negativeClause(v)}`;
+      }
       return `Using the attached final restored temple image as reference, create a respectful devotional close-up ending shot. Focus on the restored temple entrance or sanctum doorway, glowing diyas, fresh flowers, bells, polished carvings, ${v.specialElements}. Warm divine light, incense, shallow depth of field, cinematic vertical 9:16. Keep the same ${v.deityName} temple identity and materials. Avoid extreme close-up deity face details.${negativeClause(v)}`;
     }
 
     function reversePrompt(v) {
+      if (!isTempleWorkflow(v)) {
+        return `Using the attached reference image, keep the same project, camera angle, layout, and main structure. Change only the construction condition to: {STAGE_DESCRIPTION}. Preserve the ${projectSubject(v)} identity and fixed details. Realistic cinematic look.${negativeClause(v)}`;
+      }
       return `Using the attached reference image, keep the same temple, camera angle, layout, and main architecture. Change only the renovation condition to: {STAGE_DESCRIPTION}. Preserve the ${v.deityName} temple identity and sacred details. Realistic cinematic look.${negativeClause(v)}`;
     }
 
     function masterPrompt(v) {
+      const workflow = getWorkflow(v.workflowTemplate);
       const selectedStages = getActiveScenes().map(scene => scene.videoState || scene.stage).join(" → ");
-      return `Create a vertical short showing an old ${v.deityName} temple restored over time. Style: ${formatPrefix(v)}. Temple: ${v.templeStyle}, ${v.locationStyle}, ${v.material}. Camera: ${v.cameraAngle}. Selected timeline: ${selectedStages}. Workflow: create the final restored wide image first, optionally create a close-up ending from that final image, reverse-build earlier keyframes using the next later selected image as reference, then animate forward through the selected timeline. Music: ${v.musicMood}. Captions: ${v.captionStyle}. ${continuity(v)}`;
+      const subjectLine = isTempleWorkflow(v)
+        ? `old ${v.deityName} temple restored over time`
+        : `${projectSubject(v)} transformed from messy site to completed project`;
+      return `Create a vertical short showing ${subjectLine}. Style: ${formatPrefix(v)}. Subject: ${structureKind(v)}, ${v.locationStyle}, ${v.material}. Camera: ${v.cameraAngle}. Selected timeline: ${selectedStages}. Workflow: create the final wide image first, optionally create a ${workflow.closeUpName} from that final image, reverse-build earlier keyframes using the next later selected image as reference, then animate forward through the selected timeline. Music: ${v.musicMood}. Captions: ${v.captionStyle}. ${continuity(v)}`;
     }
 
     function sceneImagePrompt(scene, v) {
       if (scene.id === 7) return closeUpImagePrompt(v);
       if (scene.id === 6) return finalImagePrompt(v);
       const change = scene.changeCommand || scene.description;
+      if (!isTempleWorkflow(v)) {
+        return `Using the attached reference image, keep the same project, camera angle, layout, and main structure. Change only the construction condition to: ${change} Preserve the ${projectSubject(v)} identity and fixed details. Realistic cinematic look.${negativeClause(v)}`;
+      }
       return `Using the attached reference image, keep the same temple, camera angle, layout, and main architecture. Change only the renovation condition to: ${change} Preserve the ${v.deityName} temple identity and sacred details. Realistic cinematic look.${negativeClause(v)}`;
     }
 
     function toolInstruction(v) {
-      const base = "Use start and end images as references. Keep architecture, framing, silhouette, stairs, courtyard, and camera stable. Show workers continuously doing the renovation from first frame to last frame. Prefer smooth time-lapse, not chaotic morphing. Save the last frame for the next clip.";
+      const structureLock = isTempleWorkflow(v)
+        ? "architecture, framing, silhouette, stairs, courtyard, and camera"
+        : "main structure, framing, footprint, roofline, entrance, surroundings, and camera";
+      const workType = isTempleWorkflow(v) ? "renovation" : "construction";
+      const base = `Use start and end images as references. Keep ${structureLock} stable. Show workers continuously doing the ${workType} from first frame to last frame. Prefer smooth time-lapse, not chaotic morphing. Save the last frame for the next clip.`;
       const map = {
         generic: `${base} Generate a smooth image-to-video transformation clip.`,
         runway: `${base} Use the first keyframe as the start frame and the second keyframe as the end frame. Keep camera motion slow and cinematic. If Extend is used, begin from the saved last frame.`,
@@ -1936,20 +2260,33 @@
       const startState = startScene.videoState || startScene.description;
       const endState = endScene.videoState || endScene.description;
       if (endScene.id === 7) {
+        if (!isTempleWorkflow(v)) {
+          return `Slow final detail video. Transform from ${startState} to ${endState}. Start wide, then gently zoom/push in to finished entrance, clean paint, windows, exterior lights, landscaping, polished materials, and ${v.specialElements}. Keep the same project and camera feel. No sudden camera jumps or warping.${negativeClause(v, " Negative: ")}`;
+        }
         return `Slow devotional ending video. Transform from ${startState} to ${endState}. Start wide, then gently zoom/push in to glowing diyas, flowers, bells, carvings, sanctum doorway, and ${v.specialElements}. Keep the same temple and camera feel. No sudden camera jumps or warping.${negativeClause(v, " Negative: ")}`;
+      }
+      if (!isTempleWorkflow(v)) {
+        return `High-speed construction time-lapse. Transform from ${startState} to ${endState}. Workers visible throughout, actively clearing, building, painting, finishing, or decorating as needed. Keep the same project, fixed camera, same layout, no camera jumps, no structure morphing.${negativeClause(v, " Negative: ")}`;
       }
       return `High-speed temple renovation time-lapse. Transform from ${startState} to ${endState}. Workers visible throughout, actively cleaning, repairing, painting, or decorating as needed. Keep workers respectful and outside sacred idol areas. Keep the same temple, fixed camera, same layout, no camera jumps, no architecture morphing.${negativeClause(v, " Negative: ")}`;
     }
 
     function handoffPrompt(v) {
+      const workflow = getWorkflow(v.workflowTemplate);
       const activeScenes = getActiveScenes();
       const first = activeScenes[0];
       const second = activeScenes[1];
       const last = activeScenes[activeScenes.length - 1];
-      return `Generate the first clip from ${first.stage} to ${second.stage}. Save its last frame. Use that last frame as the next clip's starting reference, with the next selected keyframe as the target. Repeat through the selected timeline until ${last.stage}. Keep workers visible and active through renovation clips. If the close-up ending is selected, use the final wide image to close-up image as a slow devotional ending. If drift happens: preserve ${v.referenceLock}, keep ${v.cameraAngle}, do not redesign the temple. ${toolInstruction(v)}`;
+      const workType = isTempleWorkflow(v) ? "renovation" : "construction";
+      const endingStyle = isTempleWorkflow(v) ? "slow devotional ending" : "slow final detail ending";
+      const redesignTarget = isTempleWorkflow(v) ? "temple" : "project";
+      return `Generate the first clip from ${first.stage} to ${second.stage}. Save its last frame. Use that last frame as the next clip's starting reference, with the next selected keyframe as the target. Repeat through the selected timeline until ${last.stage}. Keep workers visible and active through ${workType} clips. If the ${workflow.closeUpName} is selected, use the final wide image to close-up image as a ${endingStyle}. If drift happens: preserve ${v.referenceLock}, keep ${v.cameraAngle}, do not redesign the ${redesignTarget}. ${toolInstruction(v)}`;
     }
 
     function audioCaptionPrompt(v) {
+      if (!isTempleWorkflow(v)) {
+        return `Audio: ${v.musicMood}. Captions: ${v.captionStyle}. Start quiet, build construction rhythm and progress energy, hold final reveal 3-5 seconds. Use licensed, original, or royalty-free music.`;
+      }
       return `Audio: ${v.musicMood}. Captions: ${v.captionStyle}. Start quiet, build bells/percussion/devotional energy, hold final reveal 3-5 seconds. Use licensed, original, or royalty-free devotional music.`;
     }
 
@@ -1986,15 +2323,33 @@
     }
 
     function referenceImageForScene(scene) {
-      if (scene.id === 7) return "Attach/upload the Scene 6 final image as the reference.";
-      if (scene.id === 6) return "No reference image. Generate this first and save it as Scene 6.";
+      const v = getValues();
+      if (scene.id === 7) return isTempleWorkflow(v) ? "Attach/upload the Scene 6 final image as the reference." : "Attach/upload the Scene 6 completed image as the reference.";
+      if (scene.id === 6) return isTempleWorkflow(v) ? "No reference image. Generate this first and save it as Scene 6." : "No reference image. Generate the completed final image first and save it as Scene 6.";
       const nextScene = getActiveScenes().find(s => s.id > scene.id && s.id <= 6);
       if (nextScene) return `Attach/upload the image generated for ${sceneLabel(nextScene)} (${nextScene.stage}) as the reference.`;
       return "Attach/upload the nearest later-stage image as the reference.";
     }
 
+    function renderWorkflowCopy(v) {
+      if (isTempleWorkflow(v)) {
+        $("finalPromptTitle").textContent = "Step 1: Create Scene 6 final image";
+        $("finalPromptNote").textContent = "Start here. Copy this prompt, generate the fully restored temple image, then save that result as Scene 6. After that, go to section 3 and create Scene 5 using Scene 6 as the attached reference image.";
+        $("closeUpPromptTitle").textContent = "Optional Scene 7 close-up ending";
+        $("closeUpPromptNote").textContent = "After Scene 6 is created, attach/upload the Scene 6 image and use this prompt to create a final close-up shot for the ending.";
+        $("videoPromptNote").textContent = "After all selected keyframes are ready, animate forward through the selected timeline. Renovation clips ask workers to remain visible and active; the final close-up clip becomes a slow devotional ending when selected.";
+        return;
+      }
+      $("finalPromptTitle").textContent = "Step 1: Create Scene 6 completed image";
+      $("finalPromptNote").textContent = "Start here. Copy this prompt, generate the completed final project image, then save that result as Scene 6. After that, go to section 3 and create earlier images using the next later selected image as the attached reference.";
+      $("closeUpPromptTitle").textContent = "Optional Scene 7 final detail close-up";
+      $("closeUpPromptNote").textContent = "After Scene 6 is created, attach/upload the Scene 6 image and use this prompt to create a final close-up detail shot for the ending.";
+      $("videoPromptNote").textContent = "After all selected keyframes are ready, animate forward through the selected timeline. Construction clips ask workers to remain visible and active; the final close-up clip becomes a slow detail ending when selected.";
+    }
+
     function renderPrompts() {
       const v = getValues();
+      renderWorkflowCopy(v);
       $("finalPromptText").textContent = finalImagePrompt(v);
       $("closeUpPromptText").textContent = closeUpImagePrompt(v);
       $("reversePromptText").textContent = reversePrompt(v);
@@ -2079,9 +2434,10 @@
       const activeScenes = getActiveScenes();
       const secondsPerClip = v.durationStyle === "short" ? [3, 4] : v.durationStyle === "long" ? [7, 10] : [4, 5];
       const estimatedLength = `${totalClips * secondsPerClip[0]}–${totalClips * secondsPerClip[1]} sec`;
+      const workflow = getWorkflow(v.workflowTemplate);
       $("projectPreview").innerHTML = `
-        <div class="preview-item"><strong>Deity</strong><span>${escapeHtml(v.deityName)}</span></div>
-        <div class="preview-item"><strong>Architecture</strong><span>${escapeHtml(v.templeStyle)}</span></div>
+        <div class="preview-item"><strong>${escapeHtml(workflow.subjectLabel)}</strong><span>${escapeHtml(v.deityName)}</span></div>
+        <div class="preview-item"><strong>${escapeHtml(workflow.structureLabel)}</strong><span>${escapeHtml(v.templeStyle)}</span></div>
         <div class="preview-item"><strong>Output</strong><span>${v.verticalFormat ? "Vertical 9:16" : "Custom framing"}, ${estimatedLength}</span></div>
         <div class="preview-item"><strong>Scenes / Clips</strong><span>${activeScenes.length} selected keyframes, ${totalClips} transformation clips</span></div>
         <div class="preview-item"><strong>Reference lock</strong><span>${escapeHtml(v.referenceLock || "Not set")}</span></div>
@@ -2091,6 +2447,7 @@
     }
 
     function renderAll() {
+      applyWorkflowLabels();
       renderPrompts();
       renderSceneSelector();
       renderImageRows();
@@ -2191,15 +2548,23 @@
 
     function fullPackageMarkdown() {
       const v = getValues();
+      const workflow = getWorkflow(v.workflowTemplate);
       const selectedTimeline = getActiveScenes().map(scene => `${sceneLabel(scene)}: ${scene.stage}`).join("\n");
       const imagePrompts = getReverseImageScenes().map(scene => `### ${sceneLabel(scene)}: ${scene.stage}\n\nReference image to attach: ${referenceImageForScene(scene)}\n\nDuration: ${scene.duration}\n\nInstruction: ${scene.reverseInstruction}\n\n\`\`\`text\n${sceneImagePrompt(scene, v)}\n\`\`\``).join("\n\n");
       const videoPrompts = getForwardPairs().map(([start, end], index) => `### Clip ${index + 1}: ${sceneLabel(start)} → ${sceneLabel(end)}\n\nDuration: ${videoDurationFor(v, start.id, end.id)}\n\nTool instruction: ${toolInstruction(v)}\n\n\`\`\`text\n${transitionPrompt(start, end, v)}\n\`\`\``).join("\n\n");
-      return `# AI Temple Renovation Prompt Sheet
+      const editingAudioNote = isTempleWorkflow(v)
+        ? "Add temple bells, conch, soft ambience, and properly licensed devotional music."
+        : "Add construction ambience, tool sounds, subtle percussion, and properly licensed music.";
+      const editingOverlayNote = isTempleWorkflow(v)
+        ? "Keep text overlays minimal, respectful, and secondary to the temple."
+        : "Keep text overlays minimal, progress-focused, and secondary to the transformation.";
+      return `# ${workflow.finalTitle}
 
 ## Project Variables
 
-- Deity: ${v.deityName}
-- Temple style: ${v.templeStyle}
+- Workflow: ${workflow.label}
+- ${workflow.subjectLabel}: ${v.deityName}
+- ${workflow.structureLabel}: ${v.templeStyle}
 - Location style: ${v.locationStyle}
 - Material: ${v.material}
 - Visual treatment: ${v.visualTreatment}
@@ -2230,9 +2595,9 @@ ${masterPrompt(v)}
 ${finalImagePrompt(v)}
 \`\`\`
 
-## Optional Scene 7 Close-Up Prompt
+## Optional Scene 7 ${workflow.closeUpName} Prompt
 
-Reference image to attach: Attach/upload the Scene 6 final image as the reference.
+Reference image to attach: ${isTempleWorkflow(v) ? "Attach/upload the Scene 6 final image as the reference." : "Attach/upload the Scene 6 completed image as the reference."}
 
 \`\`\`text
 ${closeUpImagePrompt(v)}
@@ -2275,15 +2640,16 @@ ${videoPrompts}
 - Stitch clips in the selected timeline order shown above.
 - Use the extracted last frame of each clip as the first-frame continuity reference for the next clip whenever possible.
 - Use short crossfades only if the frame handoff has a small visual jump.
-- Add temple bells, conch, soft ambience, and properly licensed devotional music.
-- Keep text overlays minimal, respectful, and secondary to the temple.
+- ${editingAudioNote}
+- ${editingOverlayNote}
 `;
     }
 
     function packageJson() {
       const v = getValues();
       return JSON.stringify({
-        project: "AI Temple Renovation Prompt Studio",
+        project: getWorkflow(v.workflowTemplate).finalTitle,
+        workflow: v.workflowTemplate,
         variables: v,
         continuity: continuity(v),
         finalImagePrompt: finalImagePrompt(v),
@@ -2353,13 +2719,18 @@ ${videoPrompts}
         const el = $(key);
         if (el && !el.value.trim()) el.value = value;
       });
+      if ($("workflowTemplate").value === "construction" && [oldDefaultNegative, defaultNegative].includes($("negativePrompt").value.trim())) {
+        $("negativePrompt").value = defaultConstructionNegative;
+        return;
+      }
       if ($("negativePrompt").value.trim() === oldDefaultNegative) $("negativePrompt").value = defaultNegative;
     }
 
     function applySceneInstructionDefaults() {
+      const templateScenes = getWorkflow().scenes;
       const savedById = new Map(scenes.map(scene => [scene.id, scene]));
-      const builtInIds = new Set(builtInScenes.map(scene => scene.id));
-      const mergedBuiltIns = builtInScenes.map(defaultScene => {
+      const builtInIds = new Set(templateScenes.map(scene => scene.id));
+      const mergedBuiltIns = templateScenes.map(defaultScene => {
         const saved = savedById.get(defaultScene.id) || {};
         return {
           ...defaultScene,
@@ -2373,6 +2744,7 @@ ${videoPrompts}
     }
 
     function initEvents() {
+      $("workflowTemplate").addEventListener("change", e => applyWorkflowTemplate(e.target.value));
       $("preset").addEventListener("change", e => fillPreset(e.target.value));
       document.querySelectorAll("input, select, textarea").forEach(el => {
         el.addEventListener("input", renderAll);
@@ -2380,11 +2752,12 @@ ${videoPrompts}
       });
       $("generateBtn").addEventListener("click", () => { renderAll(); showToast("Prompts generated"); });
       $("saveBtn").addEventListener("click", saveLocally);
-      $("loadSampleBtn").addEventListener("click", () => { $("preset").value = "shiva"; fillPreset("shiva"); showToast("Sample loaded"); });
+      $("loadSampleBtn").addEventListener("click", () => { $("workflowTemplate").value = "temple"; scenes = getWorkflow("temple").scenes.map(scene => ({ ...scene })); $("preset").value = "shiva"; fillPreset("shiva"); showToast("Sample loaded"); });
       $("resetAll").addEventListener("click", () => {
         if (!confirm("Reset the form and local saved data?")) return;
         localStorage.removeItem("templePromptStudio");
-        scenes = builtInScenes.map(scene => ({ ...scene }));
+        $("workflowTemplate").value = "temple";
+        scenes = getWorkflow("temple").scenes.map(scene => ({ ...scene }));
         $("preset").value = "shiva";
         $("negativePrompt").value = defaultNegative;
         fillPreset("shiva");
@@ -2411,10 +2784,10 @@ ${videoPrompts}
         const text = getForwardPairs().map(([start, end], index) => `Clip ${index + 1}: ${start.stage} to ${end.stage}\n${transitionPrompt(start, end, v)}\n\nTool note: ${toolInstruction(v)}`).join("\n\n---\n\n");
         copyText(text);
       });
-      $("downloadImageCsv").addEventListener("click", () => downloadFile("temple-image-prompts.csv", imageCsv(), "text/csv"));
-      $("downloadVideoCsv").addEventListener("click", () => downloadFile("temple-video-prompts.csv", videoCsv(), "text/csv"));
-      $("downloadMarkdown").addEventListener("click", () => downloadFile("temple-renovation-prompt-sheet.md", fullPackageMarkdown(), "text/markdown"));
-      $("downloadJson").addEventListener("click", () => downloadFile("temple-renovation-prompt-package.json", packageJson(), "application/json"));
+      $("downloadImageCsv").addEventListener("click", () => downloadFile(`${$("workflowTemplate").value}-image-prompts.csv`, imageCsv(), "text/csv"));
+      $("downloadVideoCsv").addEventListener("click", () => downloadFile(`${$("workflowTemplate").value}-video-prompts.csv`, videoCsv(), "text/csv"));
+      $("downloadMarkdown").addEventListener("click", () => downloadFile(`${$("workflowTemplate").value}-prompt-sheet.md`, fullPackageMarkdown(), "text/markdown"));
+      $("downloadJson").addEventListener("click", () => downloadFile(`${$("workflowTemplate").value}-prompt-package.json`, packageJson(), "application/json"));
       $("copyPackage").addEventListener("click", () => copyText(fullPackageMarkdown()));
       $("addScene").addEventListener("click", () => $("customSceneEditor").style.display = "block");
       $("cancelCustomScene").addEventListener("click", () => $("customSceneEditor").style.display = "none");
@@ -2439,7 +2812,9 @@ ${videoPrompts}
           duration,
           description,
           reverseInstruction: "Custom scene. Use the nearest later-stage image as reference and preserve continuity.",
-          nextMotion: "Smooth cinematic time-lapse transformation with stable architecture and devotional atmosphere."
+          nextMotion: $("workflowTemplate").value === "construction"
+            ? "Smooth cinematic time-lapse transformation with stable structure, visible workers, and realistic construction progress."
+            : "Smooth cinematic time-lapse transformation with stable architecture and devotional atmosphere."
         });
         scenes.sort((a, b) => b.id - a.id);
         $("customSceneId").value = "";
@@ -2453,6 +2828,7 @@ ${videoPrompts}
     }
 
     function init() {
+      initWorkflowSelect();
       initPresetSelect();
       initOptionSelects();
       $("negativePrompt").value = defaultNegative;
